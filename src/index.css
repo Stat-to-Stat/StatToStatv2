@@ -13,6 +13,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+#root{
+  height: 100vh;
+  width: 100vw;
+  margin: 0 auto;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -65,4 +71,9 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.center-items{
+  display: grid;
+  place-items: center;
 }
