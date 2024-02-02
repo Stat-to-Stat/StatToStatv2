@@ -1,5 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
-
+import jsonp from 'jsonp';
 // Single Player Stats and Bio (Goalies included)
 
 // export const getPlayer = async (id) => {
@@ -20,23 +19,29 @@ import axios, { AxiosResponse } from 'axios';
 //   // Add other properties as needed
 // }
 
-export const getAllPlayers = async (): Promise<unknown[]> => {
-  
+const fetchData = async (url: string): Promise<unknown[] | null> => {
   try {
-    let skaters: AxiosResponse<unknown[]> | null = null;
-    skaters = await axios.get(`https://api-web.nhle.com/v1/skater-stats-leaders/20232024/2?limit=-1`);
+    const response = await fetch(url);
+    const data = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error(`Error fetching data from ${url}:`, error);
+    return null;
+  }
+};
 
-    let goalies: AxiosResponse<unknown[]> | null = null;
-    goalies = await axios.get(`https://api-web.nhle.com/v1/goalie-stats-leaders/20232024/2?limit=-1`);
-    
-    const players: unknown[] | null = [...(skaters?.data || []), ...(goalies?.data || [])];
+export const getAllPlayers = async (): Promise<unknown[]> => {
+  try {
+    const skaters = await fetchData('/api/stats/rest/en/skater/summary?isAggregate=false&isGame=false&limit=-1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId%3E=20232024');
+    const goalies = await fetchData('/api/stats/rest/en/goalie/summary?isAggregate=false&isGame=false&limit=-1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId%3E=20232024');
+
+    const players: unknown[] = [...(skaters || []), ...(goalies || [])];
     return players;
-  } 
-  catch (error) {
-    console.error('Error fetching goalie data:', error);
+  } catch (error) {
+    console.error('Error fetching player data:', error);
     return [];
   }
-  };
+};
 
 // // Player Stat Leaders
 

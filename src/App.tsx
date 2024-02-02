@@ -1,27 +1,25 @@
-import { useState, useEffect } from "React";
+import { useState, useEffect } from "react";
 
-import Button from '@mui/material/Button';
+// import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
 import { getAllPlayers } from "./api/nhlApi.js";
-
 import "./App.css";
-import axios from "axios";
 
 function App() {
 
-  // const [playerList, setPlayerList] = useState<unknown[]>([]);
+  const [playerList, setPlayerList] = useState<unknown[]>([]);
 
   // Get players
   useEffect(() => {
     const fetchData = async () => {
       try{
         // const players = await getAllPlayers();
-        const players = await axios.get(`https://api-web.nhle.com/v1/skater-stats-leaders/20232024/2?limit=-1`);
-        console.log(players);
+        const players = await getAllPlayers();
+        setPlayerList(players);
       }
       catch(err) {
         console.error(err);
@@ -29,7 +27,7 @@ function App() {
     }
 
     fetchData();
-  });
+  }, []);
 
   return (
     <div className="page-container">
@@ -40,7 +38,21 @@ function App() {
             <Autocomplete
               disablePortal
               id="combo-box-demo"
-              options={[...playerList, {label: "First option", year: 123}]}
+              options={playerList}
+              getOptionLabel={(option) => {
+                // e.g. value selected with enter, right from the input
+                if (typeof option === 'string') {
+                  return option;
+                }
+                if (option.goalieFullName) {
+                  return `${option.goalieFullName} (${option.teamAbbrevs})`;
+                }
+                if (option.skaterFullName) {
+                  return `${option.skaterFullName} (${option.teamAbbrevs})`;
+                }
+
+                return "Unknown";
+              }}
               sx={{ width: 300 }}
               renderInput={(params) => <TextField {...params} label="Player" />}
             />
