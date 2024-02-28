@@ -6,32 +6,70 @@ import CardContent from '@mui/material/CardContent';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
-import { getAllPlayers } from "./api/nhlApi.js";
+import PlayerTombstone from "./components/PlayerTombstone";
+import {Player, Goalie, Skater} from "./interfaces/Player";
+
+import { getAllPlayers } from "./api/nhlApi";
 import "./App.css";
 
 function App() {
 
-  const [playerList, setPlayerList] = useState<unknown[]>([]);
+  // For player drop down
+  // const [playerList, setPlayerList] = useState<unknown[]>([]);
 
-  // Get players
-  useEffect(() => {
-    const fetchData = async () => {
-      try{
-        // const players = await getAllPlayers();
-        const players = await getAllPlayers();
-        setPlayerList(players);
-      }
-      catch(err) {
-        console.error(err);
-      }
-    }
+  // // Get players
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try{
+  //       // const players = await getAllPlayers();
+  //       const players = await getAllPlayers();
+  //       setPlayerList(players);
+  //     }
+  //     catch(err) {
+  //       console.error(err);
+  //     }
+  //   }
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
+
+  const player1: Player = {
+    type: "Skater",
+    skaterFullName: "Billy Bitch Bro"
+  };
+  const player2: Player = {
+    type: "Goalie",
+    goalieFullName: "Billy Bitch Bro"
+  };
 
   return (
     <div className="page-container">
-      <div className="home-page-contaier">
+      <div className="comparison-container">
+        <div className="row gap-sm">
+          <h2>Player Comparison</h2>
+          <h2>Team Comparison</h2>
+        </div>
+        <div className="graveyard">
+          <PlayerTombstone player={player1} />
+          <PlayerTombstone player={player2} />
+        </div>
+        <div style={{"marginTop": "20px"}}>
+          <button>Filter</button>
+          <button>Add Player</button>
+        </div>
+        <div style={{"marginTop": "20px"}}>
+          THIS WILL BE THE TABLE
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default App
+
+
+// Below is for select player
+/*
         <Card sx={{ minWidth: 275 }}>
           <CardContent className="center-items">
             <h3>Pick a player</h3>
@@ -58,15 +96,4 @@ function App() {
             />
           </CardContent>
         </Card>
-        {/* <Card sx={{ minWidth: 275, marginTop: "15px" }}>
-          <CardContent className="center-items">
-            <h3>Pick a team</h3>
-            <Button variant="contained">Yo</Button>
-          </CardContent>
-        </Card> */}
-      </div>
-    </div>
-  )
-}
-
-export default App
+*/
