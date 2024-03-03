@@ -1,6 +1,6 @@
-import Skater from "./Skater";
-import Goalie from "./Goalie";
+import Skater from './Skater';
+import Goalie from './Goalie';
 
-type Player = Skater | Goalie;
+type Player = Skater | Goalie | undefined | null;
 
-export type {Player, Skater, Goalie};
+export type { Player, Skater, Goalie };

@@ -1,5 +1,6 @@
 type Skater = {
   type: 'Skater';
+  selected: boolean;
   playerId: number;
   //   skaterFullName: string;
   isActive: boolean;

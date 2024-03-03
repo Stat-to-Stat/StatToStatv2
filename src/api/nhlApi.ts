@@ -1,4 +1,16 @@
-import jsonp from 'jsonp';
+// import jsonp from 'jsonp';
+import { Player, Skater, Goalie } from '../interfaces/Player';
+
+const fetchData = async <T>(url: string): Promise<T | T[] | null> => {
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error(`Error fetching data from ${url}:`, error);
+    return null;
+  }
+};
 // Single Player Stats and Bio (Goalies included)
 
 // export const getPlayer = async (id) => {
@@ -12,30 +24,21 @@ import jsonp from 'jsonp';
 //   return player;
 // };
 
-// Implement Player type! :)
-// interface Player {
-//   name: string;
-//   position: string;
-//   // Add other properties as needed
-// }
-
-const fetchData = async (url: string): Promise<unknown[] | null> => {
+export const getAllPlayers = async (): Promise<Player[]> => {
   try {
-    const response = await fetch(url);
-    const data = await response.json();
-    return data.data;
-  } catch (error) {
-    console.error(`Error fetching data from ${url}:`, error);
-    return null;
-  }
-};
-
-export const getAllPlayers = async (): Promise<unknown[]> => {
-  try {
-    const skaters = await fetchData('/api/stats/rest/en/skater/summary?isAggregate=false&isGame=false&limit=-1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId%3E=20232024');
-    const goalies = await fetchData('/api/stats/rest/en/goalie/summary?isAggregate=false&isGame=false&limit=-1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId%3E=20232024');
-
-    const players: unknown[] = [...(skaters || []), ...(goalies || [])];
+    let players: Player[] = [];
+    const skaters = await fetchData<Skater>(
+      '/api/stats/rest/en/skater/summary?isAggregate=false&isGame=false&limit=-1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId%3E=20232024'
+    );
+    const goalies = await fetchData<Goalie>(
+      '/api/stats/rest/en/goalie/summary?isAggregate=false&isGame=false&limit=-1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId%3E=20232024'
+    );
+    const valid = Array.isArray(skaters) && Array.isArray(goalies);
+    if (valid) {
+      skaters.forEach((skater) => (skater.type = 'Skater'));
+      goalies.forEach((goalie) => (goalie.type = 'Goalie'));
+      players = [...(skaters || []), ...(goalies || [])];
+    }
     return players;
   } catch (error) {
     console.error('Error fetching player data:', error);
