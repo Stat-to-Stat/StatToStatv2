@@ -41,3 +41,21 @@
 .gap-lg{
   gap: 2rem;
 }
+
+.btn-primary{
+  background-color: #5B99FF !important;
+}
+
+.btn-success{
+  background-color: #C3FFAE !important;
+  color: black !important;
+}
+
+.btn-failure{
+  background-color: #FFAEAE !important;
+  color: black !important;
+}
+
+.modal-container{
+  color: black !important;
+}
