@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState, useMemo} from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,50 +10,55 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Paper from '@mui/material/Paper';
 import { visuallyHidden } from '@mui/utils';
 
-interface Data {
-  id: number;
-  calories: number;
-  carbs: number;
-  fat: number;
-  name: string;
-  protein: number;
+import { Player, Goalie, Skater } from "../interfaces/Player"
+
+interface PlayerTableInterface {
+  players: Player[];
 }
 
-function createData(
-  id: number,
+interface HeadCell {
+  disablePadding: boolean;
+  id: keyof Skater | keyof Goalie;
+  label: string;
+  numeric: boolean;
+}
+
+interface EnhancedTableProps {
+  numSelected?: number;
+  onRequestSort: (event: React.MouseEvent<unknown>, headerId: keyof Skater | keyof Goalie) => void;
+  onSelectAllClick?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  order: Order;
+  orderBy: string;
+  rowCount: number;
+  tableHeaders: TableHeaderName[];
+}
+
+interface TableHeaderName {
   name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-): Data {
-  return {
-    id,
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-  };
+  key: keyof Goalie | keyof Skater,
+  numeric: boolean
 }
 
-const rows = [
-  createData(1, 'Cupcake', 305, 3.7, 67, 4.3),
-  createData(2, 'Donut', 452, 25.0, 51, 4.9),
-  createData(3, 'Eclair', 262, 16.0, 24, 6.0),
-  createData(4, 'Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData(5, 'Gingerbread', 356, 16.0, 49, 3.9),
-  createData(6, 'Honeycomb', 408, 3.2, 87, 6.5),
-  createData(7, 'Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData(8, 'Jelly Bean', 375, 0.0, 94, 0.0),
-  createData(9, 'KitKat', 518, 26.0, 65, 7.0),
-  createData(10, 'Lollipop', 392, 0.2, 98, 0.0),
-  createData(11, 'Marshmallow', 318, 0, 81, 2.0),
-  createData(12, 'Nougat', 360, 19.0, 9, 37.0),
-  createData(13, 'Oreo', 437, 18.0, 63, 4.0),
-];
+type Order = 'asc' | 'desc';
 
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
+function isSkater(player: Goalie | Skater | undefined | null): player is Skater {
+  return player != undefined && player.type === 'Skater';
+}
+
+function isGoalie(player: Goalie | Skater | undefined | null): player is Goalie {
+  return player != undefined && player.type === 'Goalie';
+}
+
+
+function descendingComparator(a: Player, b: Player, orderBy: keyof Skater | keyof Goalie): number {
+  if (!a && !b) return 0;
+  if (!a) return 1;
+  if (!b) return -1;
+
+  if ((!isSkater(a) && !isSkater(b)) && (!isGoalie(a) || !isGoalie(b))) {
+    return 0;
+  }
+
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -63,14 +68,12 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   return 0;
 }
 
-type Order = 'asc' | 'desc';
-
-function getComparator<Key extends keyof any>(
+function getComparator<Key extends keyof Skater | keyof Goalie>(
   order: Order,
   orderBy: Key,
 ): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string },
+  a: Player,
+  b: Player,
 ) => number {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
@@ -89,62 +92,21 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
   return stabilizedThis.map((el) => el[0]);
 }
 
-interface HeadCell {
-  disablePadding: boolean;
-  id: keyof Data;
-  label: string;
-  numeric: boolean;
-}
-
-const headCells: readonly HeadCell[] = [
-  {
-    id: 'name',
-    numeric: false,
-    disablePadding: true,
-    label: 'Dessert (100g serving)',
-  },
-  {
-    id: 'calories',
-    numeric: true,
-    disablePadding: false,
-    label: 'Calories',
-  },
-  {
-    id: 'fat',
-    numeric: true,
-    disablePadding: false,
-    label: 'Fat (g)',
-  },
-  {
-    id: 'carbs',
-    numeric: true,
-    disablePadding: false,
-    label: 'Carbs (g)',
-  },
-  {
-    id: 'protein',
-    numeric: true,
-    disablePadding: false,
-    label: 'Protein (g)',
-  },
-];
-
-interface EnhancedTableProps {
-  numSelected?: number;
-  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Data) => void;
-  onSelectAllClick?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  order: Order;
-  orderBy: string;
-  rowCount: number;
-}
-
 function EnhancedTableHead(props: EnhancedTableProps) {
-  const { order, orderBy, onRequestSort } =
+  const { order, orderBy, onRequestSort, tableHeaders } =
     props;
+
   const createSortHandler =
-    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property);
+    (headerId: keyof Skater | keyof Goalie) => (event: React.MouseEvent<unknown>) => {
+      onRequestSort(event, headerId);
     };
+
+  const headCells: readonly HeadCell[] = tableHeaders.map<HeadCell>((tableHeader) => ({
+    id: tableHeader.key,
+    numeric: tableHeader.numeric,
+    disablePadding: false,
+    label: tableHeader.name,
+  }))
 
   return (
     <TableHead>
@@ -175,25 +137,33 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   );
 }
 
-export default function PlayerTable() {
-  const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('calories');
+export default function PlayerTable({players}: PlayerTableInterface) {
+  const [order, setOrder] = useState<Order>('asc');
+  const [orderBy, setOrderBy] = useState<keyof Skater | keyof Goalie>('skaterFullName');
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
-    property: keyof Data,
+    headerId: keyof Skater | keyof Goalie,
   ) => {
-    const isAsc = orderBy === property && order === 'asc';
+    const isAsc = orderBy === headerId && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
+    setOrderBy(headerId);
   };
 
-  const visibleRows = React.useMemo(
+  const visibleRows: Player[] = useMemo(
     () =>
-      stableSort(rows, getComparator(order, orderBy)),
-    [order, orderBy],
+      stableSort<Player>(players, getComparator(order, orderBy)),
+    [order, orderBy, players],
   );
 
+  // Will be needed to be changed dynamicly from table stats state/hook from modal to here
+  const tableHeaders: TableHeaderName[] = [
+    {key: "skaterFullName", name: "Full Name", numeric: false}, 
+    {key: "gamesPlayed", name: "Games Played", numeric: true}
+  ];
+
+  // In future maybe make rows for players dynamic aligning with dynamic headers, and handle N/A stats
+  /// N/A stat example: Stat for goals, Goalie doesn't have it? Display "N/A" for that stat
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
@@ -206,30 +176,40 @@ export default function PlayerTable() {
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={players.length}
+              tableHeaders={tableHeaders}
             />
             <TableBody>
-              {visibleRows.map((row) => {
+              {visibleRows.map((row: Player) => {
 
+                if(isSkater(row)){
                 return (
                   <TableRow
                     hover
                     tabIndex={-1}
-                    key={row.id}
+                    key={row.playerId}
                   >
                     <TableCell
                       component="th"
                       scope="row"
                       padding="none"
                     >
-                      {row.name}
+                      {row.skaterFullName}
                     </TableCell>
-                    <TableCell align="right">{row.calories}</TableCell>
-                    <TableCell align="right">{row.fat}</TableCell>
-                    <TableCell align="right">{row.carbs}</TableCell>
-                    <TableCell align="right">{row.protein}</TableCell>
+                    <TableCell align="right">{row.gamesPlayed}</TableCell>
                   </TableRow>
                 );
+              }
+              else if(isGoalie(row)){
+                return (
+                  <></>
+                );
+              }else{
+                return(
+                  <></>
+                )
+              }
+
               })}
             </TableBody>
           </Table>

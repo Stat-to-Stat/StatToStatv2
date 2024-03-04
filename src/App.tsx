@@ -18,7 +18,6 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const players = await getAllPlayers();
         const players = await getAllPlayers();
         setPlayerList(players);
       } catch (err) {
@@ -28,13 +27,10 @@ function App() {
 
     fetchData();
   }, []);
-  // console.log(playerList);
 
   const addPlayer = (player: Player) => {
-    console.log(player);
     setCurrentPlayers((prevPlayers) => [...prevPlayers, player]);
   };
-  console.log(currentPlayers);
 
   return (
     <div className='page-container'>
@@ -44,6 +40,11 @@ function App() {
           <h2>Team Comparison</h2>
         </div>
         <div className='graveyard'>
+          {currentPlayers.map((player, index) => {
+            return(
+              <PlayerTombstone key={index} player={player} />
+            )
+          })}
           {/* <PlayerTombstone player={player1} />
           <PlayerTombstone player={player2} /> */}
         </div>
@@ -56,7 +57,7 @@ function App() {
           />
         </div>
         {/* Will need to pass in selected players, or an array of players to display their data */}
-        <PlayerTable />
+        <PlayerTable players={currentPlayers} />
       </div>
     </div>
   );

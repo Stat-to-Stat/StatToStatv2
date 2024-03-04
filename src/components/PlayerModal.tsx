@@ -4,9 +4,17 @@ import Autocomplete from '@mui/material/Autocomplete';
 import ModalTemplate from './ModalTemplate';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import { Player, Skater, Goalie } from '../interfaces/Player';
+import { Player, Goalie, Skater } from '../interfaces/Player';
 
 import { PlayerModalInterface } from '../interfaces/ModalInterface';
+
+function isSkater(player: Goalie | Skater | undefined | null): player is Skater {
+  return player != undefined && player.type === 'Skater';
+}
+
+function isGoalie(player: Goalie | Skater | undefined | null): player is Goalie {
+  return player != undefined && player.type === 'Goalie';
+}
 
 const PlayerModal = ({
   modalName,
@@ -42,21 +50,27 @@ const PlayerModal = ({
           <div>Season</div>
           <div>
             <Autocomplete
-              onChange={(e: any, newPlayer: Player) => {
+              onChange={(e: unknown, newPlayer: Player) => {
                 setSelectedPlayer(newPlayer);
               }}
               disablePortal
               id='combo-box-demo'
               options={players}
               getOptionLabel={(option) => {
-                if (typeof option === 'string') {
-                  return option;
+                if(option === undefined || option === null){
+                  return "Unknown"
                 }
-                if (option.goalieFullName) {
-                  return `${option.goalieFullName} (${option.teamAbbrevs})`;
+
+                if(isSkater(option)){
+                  if (option.skaterFullName) {
+                    return `${option.skaterFullName} (${option.teamAbbrevs})`;
+                  }
                 }
-                if (option.skaterFullName) {
-                  return `${option.skaterFullName} (${option.teamAbbrevs})`;
+
+                if(isGoalie(option)){
+                  if (option.goalieFullName) {
+                    return `${option.goalieFullName} (Team Abbrevs)`;
+                  }
                 }
 
                 return 'Unknown';

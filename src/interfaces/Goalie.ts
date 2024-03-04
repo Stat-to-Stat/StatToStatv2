@@ -1,6 +1,5 @@
 type Goalie = {
   type: 'Goalie';
-  selected: boolean;
   goalieFullName: string;
 };
 

@@ -4,16 +4,16 @@ interface PlayerTombstoneInterface {
   player: Player;
 }
 
-function isSkater(player: Goalie | Skater): player is Skater {
-  return player.type === 'Skater';
+function isSkater(player: Goalie | Skater | undefined | null): player is Skater {
+  return player != undefined && player.type === 'Skater';
 }
-function isGoalie(player: Goalie | Skater): player is Goalie {
-  return player.type === 'Goalie';
+function isGoalie(player: Goalie | Skater | undefined | null): player is Goalie {
+  return player != undefined && player.type === 'Goalie';
 }
 
 const PlayerTombstone = ({ player }: PlayerTombstoneInterface) => {
   if (isSkater(player)) {
-    return <div></div>;
+    return <div>{player.skaterFullName}</div>;
   } else if (isGoalie(player)) {
     return <div>Goalie</div>;
   }
