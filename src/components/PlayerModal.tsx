@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
 import ModalTemplate from './ModalTemplate';
@@ -8,12 +8,23 @@ import { Player, Goalie, Skater } from '../interfaces/Player';
 
 import { PlayerModalInterface } from '../interfaces/ModalInterface';
 
-function isSkater(player: Goalie | Skater | undefined | null): player is Skater {
-  return player != undefined && player.type === 'Skater';
+const autoCorrectContainer: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '1rem'
+};
+
+const buttonsContainer: React.CSSProperties = {
+  display: 'flex',
+  justifyContent: 'space-between'
 }
 
-function isGoalie(player: Goalie | Skater | undefined | null): player is Goalie {
-  return player != undefined && player.type === 'Goalie';
+function isSkater(player: Goalie | Skater | null): player is Skater {
+  return player != null && player.type === 'Skater';
+}
+
+function isGoalie(player: Goalie | Skater | null): player is Goalie {
+  return player != null && player.type === 'Goalie';
 }
 
 const PlayerModal = ({
@@ -24,14 +35,7 @@ const PlayerModal = ({
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [selectedPlayer, setSelectedPlayer] = useState<Player>(undefined);
-
-  // const selectedPlayers = React.useMemo(
-  //   () => players.filter((player) => player.selected),
-  //   [players]
-  // );
-
-  // const selectedPlayer: Player = useMemo(undefined, players);
+  const [selectedPlayer, setSelectedPlayer] = useState<Player>(null);
 
   return (
     <div>
@@ -46,18 +50,26 @@ const PlayerModal = ({
         <Typography id='modal-title' variant='h6' component='h2'>
           {modalName}
         </Typography>
-        <div id='modal-description' sx={{ mt: 2 }}>
-          <div>Season</div>
+        <div id='modal-description' style={autoCorrectContainer}>
+          <div>
+          <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={[{label: "2023-2024"}]}
+              sx={{ width: 300 }}
+              renderInput={(params) => <TextField {...params} label="Season" />}
+            />
+          </div>
           <div>
             <Autocomplete
-              onChange={(e: unknown, newPlayer: Player) => {
+              onChange={(e: React.SyntheticEvent<Element, Event>, newPlayer: Player) => {
                 setSelectedPlayer(newPlayer);
               }}
               disablePortal
               id='combo-box-demo'
               options={players}
               getOptionLabel={(option) => {
-                if(option === undefined || option === null){
+                if(option === null){
                   return "Unknown"
                 }
 
@@ -79,7 +91,7 @@ const PlayerModal = ({
               renderInput={(params) => <TextField {...params} label='Player' />}
             />
           </div>
-          <div>
+          <div style={buttonsContainer}>
             <Button
               className='btn-success'
               variant='contained'

@@ -28,7 +28,7 @@ type Skater = {
     timeOnIcePerGame: number
 }
 
-type Skater2 = {
+type SkaterInfo = {
   gamesPlayed: number;
   type: 'Skater';
   playerId: number;

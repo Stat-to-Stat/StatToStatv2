@@ -9,6 +9,12 @@ import { Player, Goalie, Skater } from './interfaces/Player';
 import { getAllPlayers } from './api/nhlApi';
 import './App.css';
 
+const tombStoneSeperator: React.CSSProperties = {
+  backgroundColor: "rgb(46 55 95)",
+  width: "2px",
+  height: "100%"
+}
+
 function App() {
   // For player drop down
   const [playerList, setPlayerList] = useState<Player[]>([]);
@@ -42,11 +48,12 @@ function App() {
         <div className='graveyard'>
           {currentPlayers.map((player, index) => {
             return(
-              <PlayerTombstone key={index} player={player} />
+              <>
+                <PlayerTombstone key={index} player={player} />
+                {index+1 < currentPlayers.length ? <div style={tombStoneSeperator}></div> : ""}
+              </>
             )
           })}
-          {/* <PlayerTombstone player={player1} />
-          <PlayerTombstone player={player2} /> */}
         </div>
         <div className='row gap-sm'>
           <FilterModal modalName={'Filter Stats'} />

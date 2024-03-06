@@ -1,7 +1,11 @@
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-
+import React from 'react';
+import { Modal, Backdrop, styled, Box } from '@mui/material';
 import { ModalInterface } from "../interfaces/ModalInterface"
+
+const BlurredBackdrop = styled(Backdrop)({
+    backdropFilter: 'blur(5px)',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+  });
 
 const style = {
     position: 'absolute',
@@ -13,6 +17,9 @@ const style = {
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
   };
 
 const ModalTemplate = ({isOpen, handleClose, children}: ModalInterface) => {
@@ -26,9 +33,10 @@ const ModalTemplate = ({isOpen, handleClose, children}: ModalInterface) => {
                 onClose={handleClose}
                 aria-labelledby="modal-title"
                 aria-describedby="modal-description"
+                slots={{ backdrop: BlurredBackdrop }}
             >
                 <Box sx={style}>
-                {children}
+                    {children}
                 </Box>
             </Modal>
         </div>

@@ -1,13 +1,5 @@
-import React, {useState, useMemo} from 'react';
-import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
-import Paper from '@mui/material/Paper';
+import React, { useState, useMemo } from 'react';
+import { Paper, TableSortLabel, TableRow, TableHead, TableContainer, TableCell, TableBody, Table, Box } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 
 import { Player, Goalie, Skater } from "../interfaces/Player"
@@ -25,7 +17,7 @@ interface HeadCell {
 
 interface EnhancedTableProps {
   numSelected?: number;
-  onRequestSort: (event: React.MouseEvent<unknown>, headerId: keyof Skater | keyof Goalie) => void;
+  onRequestSort: (event: React.MouseEvent<HTMLButtonElement>, headerId: keyof Skater | keyof Goalie) => void;
   onSelectAllClick?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   order: Order;
   orderBy: string;
@@ -41,12 +33,12 @@ interface TableHeaderName {
 
 type Order = 'asc' | 'desc';
 
-function isSkater(player: Goalie | Skater | undefined | null): player is Skater {
-  return player != undefined && player.type === 'Skater';
+function isSkater(player: Goalie | Skater | null): player is Skater {
+  return player != null && player.type === 'Skater';
 }
 
-function isGoalie(player: Goalie | Skater | undefined | null): player is Goalie {
-  return player != undefined && player.type === 'Goalie';
+function isGoalie(player: Goalie | Skater | null): player is Goalie {
+  return player != null && player.type === 'Goalie';
 }
 
 
@@ -55,16 +47,33 @@ function descendingComparator(a: Player, b: Player, orderBy: keyof Skater | keyo
   if (!a) return 1;
   if (!b) return -1;
 
-  if ((!isSkater(a) && !isSkater(b)) && (!isGoalie(a) || !isGoalie(b))) {
+  const isNotSkater = (!isSkater(a) || !isSkater(b))
+  const isNotGoalie = (!isGoalie(a) || !isGoalie(b))
+
+  if (isNotSkater && isNotGoalie) {
     return 0;
   }
 
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
+  if(!isNotSkater){
+    orderBy = (orderBy as keyof Skater)
+    
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+  }else if(!isNotGoalie){
+    orderBy = (orderBy as keyof Goalie)
+    
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
   }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
+
   return 0;
 }
 
@@ -97,7 +106,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     props;
 
   const createSortHandler =
-    (headerId: keyof Skater | keyof Goalie) => (event: React.MouseEvent<unknown>) => {
+    (headerId: keyof Skater | keyof Goalie) => (event: React.MouseEvent<HTMLButtonElement>) => {
       onRequestSort(event, headerId);
     };
 
@@ -137,12 +146,12 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   );
 }
 
-export default function PlayerTable({players}: PlayerTableInterface) {
+export default function PlayerTable({ players }: PlayerTableInterface) {
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<keyof Skater | keyof Goalie>('skaterFullName');
 
   const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
+    event: React.MouseEvent<HTMLButtonElement>,
     headerId: keyof Skater | keyof Goalie,
   ) => {
     const isAsc = orderBy === headerId && order === 'asc';
@@ -158,8 +167,8 @@ export default function PlayerTable({players}: PlayerTableInterface) {
 
   // Will be needed to be changed dynamicly from table stats state/hook from modal to here
   const tableHeaders: TableHeaderName[] = [
-    {key: "skaterFullName", name: "Full Name", numeric: false}, 
-    {key: "gamesPlayed", name: "Games Played", numeric: true}
+    { key: "skaterFullName", name: "Full Name", numeric: false },
+    { key: "gamesPlayed", name: "Games Played", numeric: true }
   ];
 
   // In future maybe make rows for players dynamic aligning with dynamic headers, and handle N/A stats
@@ -180,35 +189,35 @@ export default function PlayerTable({players}: PlayerTableInterface) {
               tableHeaders={tableHeaders}
             />
             <TableBody>
-              {visibleRows.map((row: Player) => {
+              {visibleRows.map((row: Player, index: number) => {
 
-                if(isSkater(row)){
-                return (
-                  <TableRow
-                    hover
-                    tabIndex={-1}
-                    key={row.playerId}
-                  >
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      padding="none"
+                if (isSkater(row)) {
+                  return (
+                    <TableRow
+                      hover
+                      tabIndex={-1}
+                      key={index}
                     >
-                      {row.skaterFullName}
-                    </TableCell>
-                    <TableCell align="right">{row.gamesPlayed}</TableCell>
-                  </TableRow>
-                );
-              }
-              else if(isGoalie(row)){
-                return (
-                  <></>
-                );
-              }else{
-                return(
-                  <></>
-                )
-              }
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        padding="none"
+                      >
+                        {row.skaterFullName}
+                      </TableCell>
+                      <TableCell align="right">{row.gamesPlayed}</TableCell>
+                    </TableRow>
+                  );
+                }
+                else if (isGoalie(row)) {
+                  return (
+                    <></>
+                  );
+                } else {
+                  return (
+                    <></>
+                  )
+                }
 
               })}
             </TableBody>
