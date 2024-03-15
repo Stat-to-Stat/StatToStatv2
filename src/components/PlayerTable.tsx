@@ -1,11 +1,23 @@
 import React, { useState, useMemo } from 'react';
-import { Paper, TableSortLabel, TableRow, TableHead, TableContainer, TableCell, TableBody, Table, Box } from '@mui/material';
+import {
+  Paper,
+  TableSortLabel,
+  TableRow,
+  TableHead,
+  TableContainer,
+  TableCell,
+  TableBody,
+  Table,
+  Box,
+} from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 
-import { Player, Goalie, Skater } from "../interfaces/Player"
+import { Player, Goalie, Skater } from '../interfaces/Player';
+import SkaterInfo from '../interfaces/SkaterInfo';
+import { PlayerInfo } from '../interfaces/PlayerInfo';
 
 interface PlayerTableInterface {
-  players: Player[];
+  players: PlayerInfo[];
 }
 
 interface HeadCell {
@@ -17,7 +29,10 @@ interface HeadCell {
 
 interface EnhancedTableProps {
   numSelected?: number;
-  onRequestSort: (event: React.MouseEvent<HTMLButtonElement>, headerId: keyof Skater | keyof Goalie) => void;
+  onRequestSort: (
+    event: React.MouseEvent<HTMLButtonElement>,
+    headerId: keyof Skater | keyof Goalie
+  ) => void;
   onSelectAllClick?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   order: Order;
   orderBy: string;
@@ -26,9 +41,9 @@ interface EnhancedTableProps {
 }
 
 interface TableHeaderName {
-  name: string,
-  key: keyof Goalie | keyof Skater,
-  numeric: boolean
+  name: string;
+  key: keyof Goalie | keyof Skater;
+  numeric: boolean;
 }
 
 type Order = 'asc' | 'desc';
@@ -37,35 +52,42 @@ function isSkater(player: Goalie | Skater | null): player is Skater {
   return player != null && player.type === 'Skater';
 }
 
+function isSkaterInfo(player: SkaterInfo | null): player is Skater {
+  return player != null && player.type === 'Skater';
+}
+
 function isGoalie(player: Goalie | Skater | null): player is Goalie {
   return player != null && player.type === 'Goalie';
 }
 
-
-function descendingComparator(a: Player, b: Player, orderBy: keyof Skater | keyof Goalie): number {
+function descendingComparator(
+  a: PlayerInfo,
+  b: PlayerInfo,
+  orderBy: keyof Skater | keyof Goalie
+): number {
   if (!a && !b) return 0;
   if (!a) return 1;
   if (!b) return -1;
 
-  const isNotSkater = (!isSkater(a) || !isSkater(b))
-  const isNotGoalie = (!isGoalie(a) || !isGoalie(b))
+  const isNotSkater = !isSkater(a) || !isSkater(b);
+  const isNotGoalie = !isGoalie(a) || !isGoalie(b);
 
   if (isNotSkater && isNotGoalie) {
     return 0;
   }
 
-  if(!isNotSkater){
-    orderBy = (orderBy as keyof Skater)
-    
+  if (!isNotSkater) {
+    orderBy = orderBy as keyof Skater;
+
     if (b[orderBy] < a[orderBy]) {
       return -1;
     }
     if (b[orderBy] > a[orderBy]) {
       return 1;
     }
-  }else if(!isNotGoalie){
-    orderBy = (orderBy as keyof Goalie)
-    
+  } else if (!isNotGoalie) {
+    orderBy = orderBy as keyof Goalie;
+
     if (b[orderBy] < a[orderBy]) {
       return -1;
     }
@@ -79,17 +101,17 @@ function descendingComparator(a: Player, b: Player, orderBy: keyof Skater | keyo
 
 function getComparator<Key extends keyof Skater | keyof Goalie>(
   order: Order,
-  orderBy: Key,
-): (
-  a: Player,
-  b: Player,
-) => number {
+  orderBy: Key
+): (a: PlayerInfo, b: PlayerInfo) => number {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
+function stableSort<T>(
+  array: readonly T[],
+  comparator: (a: T, b: T) => number
+) {
   const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -102,20 +124,22 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-  const { order, orderBy, onRequestSort, tableHeaders } =
-    props;
+  const { order, orderBy, onRequestSort, tableHeaders } = props;
 
   const createSortHandler =
-    (headerId: keyof Skater | keyof Goalie) => (event: React.MouseEvent<HTMLButtonElement>) => {
+    (headerId: keyof Skater | keyof Goalie) =>
+    (event: React.MouseEvent<HTMLButtonElement>) => {
       onRequestSort(event, headerId);
     };
 
-  const headCells: readonly HeadCell[] = tableHeaders.map<HeadCell>((tableHeader) => ({
-    id: tableHeader.key,
-    numeric: tableHeader.numeric,
-    disablePadding: false,
-    label: tableHeader.name,
-  }))
+  const headCells: readonly HeadCell[] = tableHeaders.map<HeadCell>(
+    (tableHeader) => ({
+      id: tableHeader.key,
+      numeric: tableHeader.numeric,
+      disablePadding: false,
+      label: tableHeader.name,
+    })
+  );
 
   return (
     <TableHead>
@@ -134,7 +158,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             >
               {headCell.label}
               {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
+                <Box component='span' sx={visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </Box>
               ) : null}
@@ -148,27 +172,28 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 export default function PlayerTable({ players }: PlayerTableInterface) {
   const [order, setOrder] = useState<Order>('asc');
-  const [orderBy, setOrderBy] = useState<keyof Skater | keyof Goalie>('skaterFullName');
+  const [orderBy, setOrderBy] = useState<keyof Skater | keyof Goalie>(
+    'skaterFullName'
+  );
 
   const handleRequestSort = (
     event: React.MouseEvent<HTMLButtonElement>,
-    headerId: keyof Skater | keyof Goalie,
+    headerId: keyof Skater | keyof Goalie
   ) => {
     const isAsc = orderBy === headerId && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(headerId);
   };
 
-  const visibleRows: Player[] = useMemo(
-    () =>
-      stableSort<Player>(players, getComparator(order, orderBy)),
-    [order, orderBy, players],
+  const visibleRows: PlayerInfo[] = useMemo(
+    () => stableSort<PlayerInfo>(players, getComparator(order, orderBy)),
+    [order, orderBy, players]
   );
 
   // Will be needed to be changed dynamicly from table stats state/hook from modal to here
   const tableHeaders: TableHeaderName[] = [
-    { key: "skaterFullName", name: "Full Name", numeric: false },
-    { key: "gamesPlayed", name: "Games Played", numeric: true }
+    { key: 'skaterFullName', name: 'Full Name', numeric: false },
+    { key: 'gamesPlayed', name: 'Games Played', numeric: true },
   ];
 
   // In future maybe make rows for players dynamic aligning with dynamic headers, and handle N/A stats
@@ -177,10 +202,7 @@ export default function PlayerTable({ players }: PlayerTableInterface) {
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
         <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-          >
+          <Table sx={{ minWidth: 750 }} aria-labelledby='tableTitle'>
             <EnhancedTableHead
               order={order}
               orderBy={orderBy}
@@ -189,36 +211,23 @@ export default function PlayerTable({ players }: PlayerTableInterface) {
               tableHeaders={tableHeaders}
             />
             <TableBody>
-              {visibleRows.map((row: Player, index: number) => {
-
-                if (isSkater(row)) {
+              {visibleRows.map((row: PlayerInfo, index: number) => {
+                if (isSkaterInfo(row)) {
                   return (
-                    <TableRow
-                      hover
-                      tabIndex={-1}
-                      key={index}
-                    >
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        padding="none"
-                      >
-                        {row.skaterFullName}
+                    <TableRow hover tabIndex={-1} key={index}>
+                      <TableCell component='th' scope='row' padding='none'>
+                        {row ? row.skaterFullName : ''}
                       </TableCell>
-                      <TableCell align="right">{row.gamesPlayed}</TableCell>
+                      <TableCell align='right'>
+                        {row ? row.gamesPlayed : ''}
+                      </TableCell>
                     </TableRow>
                   );
-                }
-                else if (isGoalie(row)) {
-                  return (
-                    <></>
-                  );
+                } else if (isGoalie(row)) {
+                  return <></>;
                 } else {
-                  return (
-                    <></>
-                  )
+                  return <></>;
                 }
-
               })}
             </TableBody>
           </Table>

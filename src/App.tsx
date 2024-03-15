@@ -5,20 +5,20 @@ import FilterModal from './components/FilterModal';
 import PlayerModal from './components/PlayerModal';
 import PlayerTable from './components/PlayerTable';
 import { Player, Goalie, Skater } from './interfaces/Player';
-
-import { getAllPlayers } from './api/nhlApi';
+import SkaterInfo from './interfaces/SkaterInfo';
+import { getAllPlayers, getPlayer } from './api/nhlApi';
 import './App.css';
 
 const tombStoneSeperator: React.CSSProperties = {
-  backgroundColor: "rgb(46 55 95)",
-  width: "2px",
-  height: "100%"
-}
+  backgroundColor: 'rgb(46 55 95)',
+  width: '2px',
+  height: '100%',
+};
 
 function App() {
   // For player drop down
   const [playerList, setPlayerList] = useState<Player[]>([]);
-  const [currentPlayers, setCurrentPlayers] = useState<Player[]>([]);
+  const [currentPlayers, setCurrentPlayers] = useState<SkaterInfo[]>([]);
 
   // Get players
   useEffect(() => {
@@ -34,8 +34,22 @@ function App() {
     fetchData();
   }, []);
 
+  function isSkater(
+    player: Goalie | Skater | SkaterInfo | null
+  ): player is Skater {
+    return player != null && player.type === 'Skater';
+  }
+
+  // function isGoalie(player: Goalie | Skater | null): player is Goalie {
+  //   return player != null && player.type === 'Goalie';
+  // }
+
   const addPlayer = (player: Player) => {
-    setCurrentPlayers((prevPlayers) => [...prevPlayers, player]);
+    if (isSkater(player)) {
+      getPlayer(player.playerId).then((currPlayer: SkaterInfo) => {
+        setCurrentPlayers((prevPlayers) => [...prevPlayers, currPlayer]);
+      });
+    }
   };
 
   return (
@@ -47,12 +61,20 @@ function App() {
         </div>
         <div className='graveyard'>
           {currentPlayers.map((player, index) => {
-            return(
+            return (
               <>
-                <PlayerTombstone key={index} player={player} />
-                {index+1 < currentPlayers.length ? <div style={tombStoneSeperator}></div> : ""}
+                <PlayerTombstone
+                  player={player}
+                  key={player.playerId + index}
+                />
+
+                {/* {index + 1 < currentPlayers.length ? (
+                  <div style={tombStoneSeperator} key={index}></div>
+                ) : (
+                  ''
+                )} */}
               </>
-            )
+            );
           })}
         </div>
         <div className='row gap-sm'>

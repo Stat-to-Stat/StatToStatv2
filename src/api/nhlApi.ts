@@ -1,5 +1,6 @@
 // import jsonp from 'jsonp';
 import { Player, Skater, Goalie } from '../interfaces/Player';
+import SkaterInfo from '../interfaces/SkaterInfo';
 
 const fetchData = async <T>(url: string): Promise<T | T[] | null> => {
   try {
@@ -11,18 +12,25 @@ const fetchData = async <T>(url: string): Promise<T | T[] | null> => {
     return null;
   }
 };
+
+const fetchSingleData = async <T>(url: string): Promise<T> => {
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(`Error fetching data from ${url}:`, error);
+    return <T>{};
+  }
+};
 // Single Player Stats and Bio (Goalies included)
 
-// export const getPlayer = async (id) => {
-//   let player = null;
-//   await axios
-//     .get(`https://api-web.nhle.com/v1/player/${id}/landing`)
-//     .then((res) => {
-//       player = res;
-//     });
-
-//   return player;
-// };
+export const getPlayer = async (id: number): Promise<SkaterInfo> => {
+  const player = await fetchSingleData<SkaterInfo>(
+    `/api-web/v1/player/${id}/landing`
+  );
+  return player;
+};
 
 export const getAllPlayers = async (): Promise<Player[]> => {
   try {
