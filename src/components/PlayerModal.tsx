@@ -99,7 +99,7 @@ const PlayerModal = ({
             >
               Add
             </Button>
-            <Button className='btn-failure' variant='contained'>
+            <Button className='btn-failure' variant='contained' onClick={() => setOpen(!open)}>
               Cancel
             </Button>
           </div>
