@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-import PlayerTombstone from './components/PlayerTombstone';
-import FilterModal from './components/FilterModal';
-import PlayerModal from './components/PlayerModal';
-import PlayerTable from './components/PlayerTable';
-import { Player, Goalie, Skater } from './interfaces/Player';
-import SkaterInfo from './interfaces/SkaterInfo';
-import { getAllPlayers, getPlayer } from './api/nhlApi';
-import './App.css';
+import PlayerTombstone from "./components/PlayerTombstone";
+import FilterModal from "./components/FilterModal";
+import PlayerModal from "./components/PlayerModal";
+import PlayerTable from "./components/PlayerTable";
+import { Player, Goalie, Skater } from "./interfaces/Player";
+import SkaterInfo from "./interfaces/SkaterInfo";
+import { getAllPlayers, getPlayer } from "./api/nhlApi";
+import "./App.css";
 
 // const tombStoneSeperator: React.CSSProperties = {
 //   backgroundColor: 'rgb(46 55 95)',
@@ -37,7 +37,7 @@ function App() {
   function isSkater(
     player: Goalie | Skater | SkaterInfo | null
   ): player is Skater {
-    return player != null && player.type === 'Skater';
+    return player != null && player.type === "Skater";
   }
 
   // function isGoalie(player: Goalie | Skater | null): player is Goalie {
@@ -53,34 +53,36 @@ function App() {
   };
 
   return (
-    <div className='page-container'>
-      <div className='comparison-container gap-sm'>
-        <div className='row gap-sm'>
+    <div className="page-container">
+      <div className="comparison-container gap-sm">
+        <div className="row gap-sm">
           <h2>Player Comparison</h2>
           <h2>Team Comparison</h2>
         </div>
-        <div className='graveyard'>
-          {currentPlayers.map((player, index) => {
-            return (
-              <>
-                <PlayerTombstone
-                  player={player}
-                  key={player.playerId + index}
-                />
+        <div className="graveyard">
+          {currentPlayers !== null
+            ? currentPlayers.map((player, index) => {
+                return (
+                  <>
+                    <PlayerTombstone
+                      player={player}
+                      key={player.playerId + index}
+                    />
 
-                {/* {index + 1 < currentPlayers.length ? (
+                    {/* {index + 1 < currentPlayers.length ? (
                   <div style={tombStoneSeperator} key={index}></div>
                 ) : (
                   ''
                 )} */}
-              </>
-            );
-          })}
+                  </>
+                );
+              })
+            : null}
         </div>
-        <div className='row gap-sm'>
-          <FilterModal modalName={'Filter Stats'} />
+        <div className="row gap-sm">
+          <FilterModal modalName={"Filter Stats"} />
           <PlayerModal
-            modalName={'Add Player'}
+            modalName={"Add Player"}
             players={playerList}
             addPlayer={addPlayer}
           />

@@ -1,6 +1,6 @@
 // import jsonp from 'jsonp';
-import { Player, Skater, Goalie } from '../interfaces/Player';
-import SkaterInfo from '../interfaces/SkaterInfo';
+import { Player, Skater, Goalie } from "../interfaces/Player";
+import SkaterInfo from "../interfaces/SkaterInfo";
 
 const fetchData = async <T>(url: string): Promise<T | T[] | null> => {
   try {
@@ -36,20 +36,20 @@ export const getAllPlayers = async (): Promise<Player[]> => {
   try {
     let players: Player[] = [];
     const skaters = await fetchData<Skater>(
-      '/api/stats/rest/en/skater/summary?isAggregate=false&isGame=false&limit=-1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId%3E=20232024'
+      "/api/stats/rest/en/skater/summary?isAggregate=false&isGame=false&limit=-1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId%3E=20232024"
     );
     const goalies = await fetchData<Goalie>(
-      '/api/stats/rest/en/goalie/summary?isAggregate=false&isGame=false&limit=-1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId%3E=20232024'
+      "/api/stats/rest/en/goalie/summary?isAggregate=false&isGame=false&limit=-1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId%3E=20232024"
     );
     const valid = Array.isArray(skaters) && Array.isArray(goalies);
     if (valid) {
-      skaters.forEach((skater) => (skater.type = 'Skater'));
-      goalies.forEach((goalie) => (goalie.type = 'Goalie'));
+      skaters.forEach((skater) => (skater.type = "Skater"));
+      goalies.forEach((goalie) => (goalie.type = "Goalie"));
       players = [...(skaters || []), ...(goalies || [])];
     }
     return players;
   } catch (error) {
-    console.error('Error fetching player data:', error);
+    console.error("Error fetching player data:", error);
     return [];
   }
 };
