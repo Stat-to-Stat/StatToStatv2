@@ -52,7 +52,7 @@ function isSkater(player: Goalie | Skater | null): player is Skater {
   return player != null && player.type === 'Skater';
 }
 
-function isSkaterInfo(player: SkaterInfo | null): player is Skater {
+function isSkaterInfo(player: SkaterInfo | null): player is SkaterInfo {
   return player != null && player.type === 'Skater';
 }
 

@@ -9,11 +9,11 @@ import SkaterInfo from './interfaces/SkaterInfo';
 import { getAllPlayers, getPlayer } from './api/nhlApi';
 import './App.css';
 
-const tombStoneSeperator: React.CSSProperties = {
-  backgroundColor: 'rgb(46 55 95)',
-  width: '2px',
-  height: '100%',
-};
+// const tombStoneSeperator: React.CSSProperties = {
+//   backgroundColor: 'rgb(46 55 95)',
+//   width: '2px',
+//   height: '100%',
+// };
 
 function App() {
   // For player drop down
