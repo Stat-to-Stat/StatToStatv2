@@ -1,5 +1,5 @@
-export type Skater = {
-  type: 'Skater';
+type Skater = {
+  type: "Skater";
   assists: number;
   evGoals: number;
   evPoints: number;

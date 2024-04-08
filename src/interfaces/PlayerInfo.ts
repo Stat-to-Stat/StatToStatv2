@@ -1,6 +1,6 @@
-// import GoalieInfo from "./GoalieInfo";
+import GoalieInfo from "./GoalieInfo";
 import SkaterInfo from "./SkaterInfo";
 
-type PlayerInfo = SkaterInfo | null;
+type PlayerInfo = GoalieInfo | SkaterInfo | null;
 
 export type { PlayerInfo };
