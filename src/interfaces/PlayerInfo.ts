@@ -1,5 +1,6 @@
-import SkaterInfo from './SkaterInfo';
+// import GoalieInfo from "./GoalieInfo";
+import SkaterInfo from "./SkaterInfo";
 
 type PlayerInfo = SkaterInfo | null;
 
-export type { PlayerInfo, SkaterInfo };
+export type { PlayerInfo };

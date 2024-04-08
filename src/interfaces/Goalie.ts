@@ -1,6 +1,28 @@
 type Goalie = {
-  type: 'Goalie';
+  type: "Goalie";
+  assists: number;
+  gamesPlayed: number;
+  gamesStarted: number;
   goalieFullName: string;
+  goals: number;
+  goalsAgainst: number;
+  goalsAgainstAverage: number;
+  lastName: string;
+  losses: number;
+  otLosses: number;
+  penaltyMinutes: number;
+  playerId: number;
+  points: number;
+  savePct: number;
+  saves: number;
+  seasonId: number;
+  shootsCatches: string;
+  shotsAgainst: number;
+  shutouts: number;
+  teamAbbrevs: string;
+  ties: null;
+  timeOnIce: number;
+  wins: number;
 };
 
 export default Goalie;

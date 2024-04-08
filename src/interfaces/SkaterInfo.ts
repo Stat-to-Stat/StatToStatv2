@@ -1,6 +1,6 @@
 type SkaterInfo = {
   gamesPlayed: number;
-  type: 'Skater';
+  type: "SkaterInfo";
   playerId: number;
   skaterFullName: string;
   isActive: boolean;

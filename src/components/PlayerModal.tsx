@@ -4,10 +4,16 @@ import Autocomplete from "@mui/material/Autocomplete";
 import ModalTemplate from "./ModalTemplate";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import { Player, Goalie, Skater } from "../interfaces/Player";
-
+import {
+  AllPlayers,
+  Goalie,
+  Goalies,
+  // GoalieInfo,
+  Skaters,
+  Skater,
+  // SkaterInfo,
+} from "../interfaces/Player";
 import { PlayerModalInterface } from "../interfaces/ModalInterface";
-import { getAllSeasons } from "../api/nhlApi";
 
 const autoCorrectContainer: React.CSSProperties = {
   display: "flex",
@@ -20,23 +26,25 @@ const buttonsContainer: React.CSSProperties = {
   justifyContent: "space-between",
 };
 
-function isSkater(player: Goalie | Skater | null): player is Skater {
-  return player != null && player.type === "Skater";
+function isSkater(player: Skaters): player is Skater {
+  return player !== null && player.type === "Skater";
 }
 
-function isGoalie(player: Goalie | Skater | null): player is Goalie {
-  return player != null && player.type === "Goalie";
+function isGoalie(goalie: Goalies): goalie is Goalie {
+  return goalie !== null && goalie.type === "Goalie";
 }
 
 const PlayerModal = ({
   modalName,
   players,
+  // goalies,
   addPlayer,
+  addGoalie,
 }: PlayerModalInterface) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [selectedPlayer, setSelectedPlayer] = useState<Player>(null);
+  const [selectedPlayer, setSelectedPlayer] = useState<AllPlayers>(null);
 
   return (
     <div>
@@ -64,8 +72,9 @@ const PlayerModal = ({
           <div>
             <Autocomplete
               onChange={(
-                e: React.SyntheticEvent<Element, Event>,
-                newPlayer: Player
+                _e: React.SyntheticEvent<Element, Event>,
+                // Needs to be able to handle both Skaters and Goalies
+                newPlayer: AllPlayers
               ) => {
                 setSelectedPlayer(newPlayer);
               }}
@@ -85,7 +94,7 @@ const PlayerModal = ({
 
                 if (isGoalie(option)) {
                   if (option.goalieFullName) {
-                    return `${option.goalieFullName} (Team Abbrevs)`;
+                    return `${option.goalieFullName} (${option.teamAbbrevs})`;
                   }
                 }
 
@@ -99,7 +108,12 @@ const PlayerModal = ({
             <Button
               className="btn-success"
               variant="contained"
-              onClick={() => addPlayer(selectedPlayer)}
+              onClick={() =>
+                selectedPlayer !== null && selectedPlayer.type === "Skater"
+                  ? addPlayer(selectedPlayer)
+                  : // Side effect of the issue on line 76
+                    addGoalie(selectedPlayer)
+              }
             >
               Add
             </Button>
