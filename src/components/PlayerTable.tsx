@@ -12,10 +12,10 @@ import {
 } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
 
-import { Goalie, Skater } from "../interfaces/Player";
-// import GoalieInfo from "../interfaces/GoalieInfo";
-import SkaterInfo from "../interfaces/SkaterInfo";
-import { PlayerInfo } from "../interfaces/PlayerInfo";
+// import { Goalies, Skaters } from "../interfaces/Player";
+import { Goalie, GoalieInfo } from "../interfaces/Goalie";
+import { Skater, SkaterInfo } from "../interfaces/Skater";
+import { PlayerInfo } from "../interfaces/Player";
 
 interface PlayerTableInterface {
   players: PlayerInfo[];
@@ -49,7 +49,7 @@ interface TableHeaderName {
 
 type Order = "asc" | "desc";
 
-function isSkater(player: Goalie | Skater | null): player is Skater {
+function isSkater(player: Skater | null): player is Skater {
   return player != null && player.type === "Skater";
 }
 
@@ -57,13 +57,13 @@ function isSkaterInfo(player: SkaterInfo | null): player is SkaterInfo {
   return player != null && player.type === "SkaterInfo";
 }
 
-function isGoalie(player: Goalie | Skater | null): player is Goalie {
+function isGoalie(player: Goalie | null): player is Goalie {
   return player != null && player.type === "Goalie";
 }
 
-// function isGoalieInfo(player: GoalieInfo | null): player is GoalieInfo {
-//   return player !== null && player.type === "GoalieInfo";
-// }
+function isGoalieInfo(player: GoalieInfo | null): player is GoalieInfo {
+  return player !== null && player.type === "GoalieInfo";
+}
 
 function descendingComparator(
   a: PlayerInfo,
@@ -182,7 +182,7 @@ export default function PlayerTable({ players }: PlayerTableInterface) {
   );
 
   const handleRequestSort = (
-    event: React.MouseEvent<HTMLButtonElement>,
+    _e: React.MouseEvent<HTMLButtonElement>,
     headerId: keyof Skater | keyof Goalie
   ) => {
     const isAsc = orderBy === headerId && order === "asc";

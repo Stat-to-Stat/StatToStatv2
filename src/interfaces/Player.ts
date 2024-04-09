@@ -1,18 +1,17 @@
-import Skater from "./Skater";
-import Goalie from "./Goalie";
-import GoalieInfo from "./GoalieInfo";
-import SkaterInfo from "./SkaterInfo";
+import { Skater, SkaterInfo } from "./Skater";
+import { Goalie, GoalieInfo } from "./Goalie";
 
 type Goalies = Goalie | GoalieInfo | null;
 type Skaters = Skater | SkaterInfo | null;
-
-type AllPlayers = Goalies | Skaters;
+type PlayerInfo = GoalieInfo | SkaterInfo | null;
+type AllPlayers = Goalies | Skaters | null;
 
 export type {
   AllPlayers,
   Goalie,
   Goalies,
   GoalieInfo,
+  PlayerInfo,
   Skater,
   Skaters,
   SkaterInfo,

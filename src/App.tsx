@@ -4,8 +4,9 @@ import PlayerTombstone from "./components/PlayerTombstone";
 import FilterModal from "./components/FilterModal";
 import PlayerModal from "./components/PlayerModal";
 import PlayerTable from "./components/PlayerTable";
-import { Player, Goalie, Skater } from "./interfaces/Player";
-import SkaterInfo from "./interfaces/SkaterInfo";
+// import { AllPlayers } from "./interfaces/Player";
+import { Goalie, GoalieInfo } from "./interfaces/Goalie";
+import { Skater, SkaterInfo } from "./interfaces/Skater";
 import { getAllPlayers, getPlayer } from "./api/nhlApi";
 import "./App.css";
 
@@ -17,7 +18,7 @@ import "./App.css";
 
 function App() {
   // For player drop down
-  const [playerList, setPlayerList] = useState<Player[]>([]);
+  const [playerList, setPlayerList] = useState<Skater[]>([]);
   const [currentPlayers, setCurrentPlayers] = useState<SkaterInfo[]>([]);
 
   // Get players
@@ -44,7 +45,7 @@ function App() {
   //   return player != null && player.type === 'Goalie';
   // }
 
-  const addPlayer = (player: Player) => {
+  const addPlayer = (player: Skater) => {
     if (isSkater(player)) {
       getPlayer(player.playerId).then((currPlayer: SkaterInfo) => {
         setCurrentPlayers((prevPlayers) => [...prevPlayers, currPlayer]);
