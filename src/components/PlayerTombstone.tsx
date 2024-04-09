@@ -1,6 +1,6 @@
 import React from "react";
 // import { Player, Goalie, Skater } from '../interfaces/Player';
-import SkaterInfo from "../interfaces/SkaterInfo";
+import { SkaterInfo } from "../interfaces/Skater";
 
 interface PlayerTombstoneInterface {
   player: SkaterInfo;

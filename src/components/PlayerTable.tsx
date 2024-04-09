@@ -61,9 +61,9 @@ function isGoalie(player: Goalie | null): player is Goalie {
   return player != null && player.type === "Goalie";
 }
 
-function isGoalieInfo(player: GoalieInfo | null): player is GoalieInfo {
-  return player !== null && player.type === "GoalieInfo";
-}
+// function isGoalieInfo(player: GoalieInfo | null): player is GoalieInfo {
+//   return player !== null && player.type === "GoalieInfo";
+// }
 
 function descendingComparator(
   a: PlayerInfo,
