@@ -1,5 +1,11 @@
 // import jsonp from 'jsonp';
-import { Skater, Goalie, SkaterInfo, PlayerInfo } from "../interfaces/Player";
+import {
+  Skater,
+  Goalie,
+  SkaterInfo,
+  PlayerInfo,
+  AllPlayers,
+} from "../interfaces/Player";
 // import { SkaterInfo } from "../interfaces/PlayerInfo";
 
 const fetchData = async <T>(url: string): Promise<T | T[] | null> => {
@@ -25,8 +31,8 @@ const fetchSingleData = async <T>(url: string): Promise<T> => {
 };
 // Single Player Stats and Bio (Goalies included)
 
-export const getPlayer = async (id: number): Promise<SkaterInfo> => {
-  const player = await fetchSingleData<SkaterInfo>(
+export const getPlayer = async (id: number): Promise<AllPlayers> => {
+  const player = await fetchSingleData<AllPlayers>(
     `/api-web/v1/player/${id}/landing`
   );
   return player;

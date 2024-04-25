@@ -1,12 +1,11 @@
 import React from "react";
-// import { Player, Goalie, Skater } from '../interfaces/Player';
-import { SkaterInfo } from "../interfaces/Skater";
+import { AllPlayers, GoalieInfo, SkaterInfo } from "../interfaces/Player";
 
 interface PlayerTombstoneInterface {
-  player: SkaterInfo;
+  player: AllPlayers;
 }
 
-const deadPersonStyle: React.CSSProperties = {
+const personStyle: React.CSSProperties = {
   borderRadius: "50px",
   backgroundColor: "#5F5F5F",
   width: "50px",
@@ -19,19 +18,19 @@ const tombstoneStyle: React.CSSProperties = {
   alignItems: "center",
 };
 
-// function isSkater(player: Goalie | Skater | null): player is Skater {
-//   return player !== null && player.type === 'Skater';
-// }
-// function isGoalie(player: Goalie | Skater | null): player is Goalie {
-//   return player !== null && player.type === 'Goalie';
-// }
+function isSkater(player: AllPlayers): player is SkaterInfo {
+  return player !== null && player.type === "SkaterInfo";
+}
+function isGoalie(player: AllPlayers): player is GoalieInfo {
+  return player !== null && player.type === "GoalieInfo";
+}
 
 const PlayerTombstoneHandler = (firstName: string, lastName: string) => {
   const dispayName = `${lastName}, ${firstName}`;
 
   return (
     <div style={tombstoneStyle}>
-      <div style={deadPersonStyle}></div>
+      <div style={personStyle}></div>
       <div>{dispayName}</div>
       <div>2023-2024</div>
     </div>
@@ -39,10 +38,19 @@ const PlayerTombstoneHandler = (firstName: string, lastName: string) => {
 };
 
 const PlayerTombstone = ({ player }: PlayerTombstoneInterface) => {
-  return PlayerTombstoneHandler(
-    player.firstName.default,
-    player.lastName.default
-  );
+  if (player === null) return;
+  if (isSkater(player)) {
+    return PlayerTombstoneHandler(
+      player.firstName.default,
+      player.lastName.default
+    );
+  }
+  if (isGoalie(player)) {
+    return PlayerTombstoneHandler(
+      player.firstName.default,
+      player.lastName.default
+    );
+  }
 };
 
 export default PlayerTombstone;

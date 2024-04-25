@@ -19,7 +19,7 @@ import "./App.css";
 function App() {
   // For player drop down
   const [playerList, setPlayerList] = useState<AllPlayers[]>([]);
-  const [currentPlayers, setCurrentPlayers] = useState<SkaterInfo[]>([]);
+  const [currentPlayers, setCurrentPlayers] = useState<AllPlayers[]>([]);
 
   // Get players
   useEffect(() => {
@@ -35,19 +35,23 @@ function App() {
     fetchData();
   }, []);
 
-  function isSkater(
-    player: AllPlayers
-  ): player is Skater {
+  function isSkater(player: AllPlayers): player is Skater {
     return player != null && player.type === "Skater";
   }
 
-  // function isGoalie(player: Goalie | Skater | null): player is Goalie {
-  //   return player != null && player.type === 'Goalie';
-  // }
+  function isGoalie(player: AllPlayers): player is Goalie {
+    return player != null && player.type === "Goalie";
+  }
 
   const addPlayer = (player: AllPlayers) => {
     if (isSkater(player)) {
-      getPlayer(player.playerId).then((currPlayer: SkaterInfo) => {
+      getPlayer(player.playerId).then((currPlayer: AllPlayers) => {
+        if (currPlayer !== null) currPlayer.type = "SkaterInfo";
+        setCurrentPlayers((prevPlayers) => [...prevPlayers, currPlayer]);
+      });
+    } else if (isGoalie(player)) {
+      getPlayer(player.playerId).then((currPlayer: AllPlayers) => {
+        if (currPlayer !== null) currPlayer.type = "GoalieInfo";
         setCurrentPlayers((prevPlayers) => [...prevPlayers, currPlayer]);
       });
     }
