@@ -6,11 +6,10 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import {
   // AllPlayers,
-  // Goalie,
-  // Goalies,
+  Goalie,
   // GoalieInfo,
-  Skaters,
   Skater,
+  AllPlayers,
   // SkaterInfo,
 } from "../interfaces/Player";
 import { PlayerModalInterface } from "../interfaces/ModalInterface";
@@ -26,13 +25,13 @@ const buttonsContainer: React.CSSProperties = {
   justifyContent: "space-between",
 };
 
-function isSkater(player: Skaters): player is Skater {
+function isSkater(player: AllPlayers): player is Skater {
   return player !== null && player.type === "Skater";
 }
 
-// function isGoalie(goalie: Goalies): goalie is Goalie {
-//   return goalie !== null && goalie.type === "Goalie";
-// }
+function isGoalie(goalie: AllPlayers): goalie is Goalie {
+  return goalie !== null && goalie.type === "Goalie";
+}
 
 const PlayerModal = ({
   modalName,
@@ -44,7 +43,7 @@ PlayerModalInterface) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [selectedPlayer, setSelectedPlayer] = useState<Skaters>(null);
+  const [selectedPlayer, setSelectedPlayer] = useState<AllPlayers>(null);
 
   return (
     <div>
@@ -74,7 +73,7 @@ PlayerModalInterface) => {
               onChange={(
                 _e: React.SyntheticEvent<Element, Event>,
                 // Needs to be able to handle both Skaters and Goalies
-                newPlayer: Skaters
+                newPlayer: AllPlayers
               ) => {
                 setSelectedPlayer(newPlayer);
               }}
@@ -92,11 +91,11 @@ PlayerModalInterface) => {
                   }
                 }
 
-                // if (isGoalie(option)) {
-                //   if (option.goalieFullName) {
-                //     return `${option.goalieFullName} (${option.teamAbbrevs})`;
-                //   }
-                // }
+                if (isGoalie(option)) {
+                  if (option.goalieFullName) {
+                    return `${option.goalieFullName} (${option.teamAbbrevs})`;
+                  }
+                }
 
                 return "Unknown";
               }}

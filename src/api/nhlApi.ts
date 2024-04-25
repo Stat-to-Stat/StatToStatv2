@@ -1,6 +1,6 @@
 // import jsonp from 'jsonp';
-import { Player, Skater, Goalie } from "../interfaces/Player";
-import SkaterInfo from "../interfaces/SkaterInfo";
+import { Skater, Goalie, SkaterInfo, PlayerInfo } from "../interfaces/Player";
+// import { SkaterInfo } from "../interfaces/PlayerInfo";
 
 const fetchData = async <T>(url: string): Promise<T | T[] | null> => {
   try {
@@ -32,9 +32,9 @@ export const getPlayer = async (id: number): Promise<SkaterInfo> => {
   return player;
 };
 
-export const getAllPlayers = async (): Promise<Player[]> => {
+export const getAllPlayers = async (): Promise<PlayerInfo[]> => {
   try {
-    let players: Player[] = [];
+    let players: PlayerInfo[] = [];
     const skaters = await fetchData<Skater>(
       "/api/stats/rest/en/skater/summary?isAggregate=false&isGame=false&limit=-1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId%3E=20232024"
     );

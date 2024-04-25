@@ -49,16 +49,21 @@ interface TableHeaderName {
 
 type Order = "asc" | "desc";
 
-function isSkater(player: Skater | null): player is Skater {
-  return player != null && player.type === "Skater";
-}
-
-function isSkaterInfo(player: SkaterInfo | null): player is SkaterInfo {
+function isSkater(player: PlayerInfo | null): player is SkaterInfo {
   return player != null && player.type === "SkaterInfo";
 }
 
-function isGoalie(player: Goalie | null): player is Goalie {
-  return player != null && player.type === "Goalie";
+
+function isGoalie(player: PlayerInfo | null): player is GoalieInfo {
+  return player != null && player.type === "GoalieInfo";
+}
+
+function isSkaterInfo(player: PlayerInfo | null): player is SkaterInfo {
+  return player != null && player.type === "SkaterInfo";
+}
+
+function isGoalieInfo(player: PlayerInfo | null): player is GoalieInfo {
+  return player != null && player.type === "GoalieInfo";
 }
 
 // function isGoalieInfo(player: GoalieInfo | null): player is GoalieInfo {
@@ -228,7 +233,7 @@ export default function PlayerTable({ players }: PlayerTableInterface) {
                       </TableCell>
                     </TableRow>
                   );
-                } else if (isGoalie(row)) {
+                } else if (isGoalieInfo(row)) {
                   return <></>;
                 } else {
                   return <></>;

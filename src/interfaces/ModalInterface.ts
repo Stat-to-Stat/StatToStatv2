@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Goalie, Skater } from "../interfaces/Player";
+import { AllPlayers } from "../interfaces/Player";
 
 interface ModalInterface {
   isOpen?: boolean;
@@ -10,10 +10,8 @@ interface ModalInterface {
 }
 
 interface PlayerModalInterface extends ModalInterface {
-  players: Skater[];
-  addPlayer: (skater: Skater) => void;
-  goalies: Goalie[];
-  addGoalie: (goalie: Goalie) => void;
+  players: AllPlayers[];
+  addPlayer: (player: AllPlayers) => void;
 }
 
 export type { ModalInterface, PlayerModalInterface };
