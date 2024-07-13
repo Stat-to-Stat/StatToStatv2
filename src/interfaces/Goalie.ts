@@ -32,7 +32,7 @@ type GoalieInfo = {
   currentTeamId: number;
   currentTeamAbbrev: string;
   fullTeamName: {
-    english: string;
+    default: string;
     french: string;
   };
   firstName: {

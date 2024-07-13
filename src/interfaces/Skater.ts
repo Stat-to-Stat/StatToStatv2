@@ -37,7 +37,7 @@ type SkaterInfo = {
   currentTeamId: number;
   currentTeamAbbrev: string;
   fullTeamName: {
-    english: string;
+    default: string;
     french: string;
   };
   firstName: {
@@ -57,7 +57,7 @@ type SkaterInfo = {
   weightInKilograms: number;
   birthDate: string;
   birthCity: {
-    city: string;
+    default: string;
   };
   birthStateProvince: {
     english: string;

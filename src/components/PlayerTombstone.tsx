@@ -25,12 +25,30 @@ function isGoalie(player: AllPlayers): player is GoalieInfo {
   return player !== null && player.type === "GoalieInfo";
 }
 
-const PlayerTombstoneHandler = (firstName: string, lastName: string) => {
-  const dispayName = `${lastName}, ${firstName}`;
+const SkaterTombstoneHandler = (player: SkaterInfo) => {
+  const dispayName = `${player.lastName.default}, ${player.firstName.default}`;
+  console.log(player.headshot);
 
   return (
     <div style={tombstoneStyle}>
-      <div style={personStyle}></div>
+      <div>
+        <img src={player.headshot} style={personStyle} />
+      </div>
+      <div>{dispayName}</div>
+      <div>2023-2024</div>
+    </div>
+  );
+};
+
+const GoalieTombstoneHandler = (player: GoalieInfo) => {
+  const dispayName = `${player.lastName.default}, ${player.firstName.default}`;
+  console.log(player.headshot);
+
+  return (
+    <div style={tombstoneStyle}>
+      <div>
+        <img src={player.headshot} style={personStyle} />
+      </div>
       <div>{dispayName}</div>
       <div>2023-2024</div>
     </div>
@@ -40,16 +58,10 @@ const PlayerTombstoneHandler = (firstName: string, lastName: string) => {
 const PlayerTombstone = ({ player }: PlayerTombstoneInterface) => {
   if (player === null) return;
   if (isSkater(player)) {
-    return PlayerTombstoneHandler(
-      player.firstName.default,
-      player.lastName.default
-    );
+    return SkaterTombstoneHandler(player);
   }
   if (isGoalie(player)) {
-    return PlayerTombstoneHandler(
-      player.firstName.default,
-      player.lastName.default
-    );
+    return GoalieTombstoneHandler(player);
   }
 };
 

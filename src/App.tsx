@@ -67,20 +67,7 @@ function App() {
         <div className="graveyard">
           {currentPlayers !== null
             ? currentPlayers.map((player, index) => {
-                return (
-                  <>
-                    <PlayerTombstone
-                      player={player}
-                      key={player.playerId + index}
-                    />
-
-                    {/* {index + 1 < currentPlayers.length ? (
-                  <div style={tombStoneSeperator} key={index}></div>
-                ) : (
-                  ''
-                )} */}
-                  </>
-                );
+                return <PlayerTombstone player={player} key={index} />;
               })
             : null}
         </div>

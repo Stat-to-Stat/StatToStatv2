@@ -53,7 +53,6 @@ function isSkater(player: PlayerInfo | null): player is SkaterInfo {
   return player != null && player.type === "SkaterInfo";
 }
 
-
 function isGoalie(player: PlayerInfo | null): player is GoalieInfo {
   return player != null && player.type === "GoalieInfo";
 }
@@ -213,30 +212,65 @@ export default function PlayerTable({ players }: PlayerTableInterface) {
       <Paper sx={{ width: "100%", mb: 2 }}>
         <TableContainer>
           <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
-            <EnhancedTableHead
+            {/* <EnhancedTableHead
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
               rowCount={players.length}
               tableHeaders={tableHeaders}
-            />
+            /> */}
+            <TableHead>
+              <TableRow>
+                {/*Table Rows will need to be dynamic based on filtered stats. Will also need to consider player or goalie favored stat comparisons*/}
+                <TableCell>Name</TableCell>
+                <TableCell align="right">Team</TableCell>
+              </TableRow>
+            </TableHead>
             <TableBody>
-              {visibleRows.map((row: PlayerInfo, index: number) => {
-                if (isSkaterInfo(row)) {
+              {visibleRows.map((player: PlayerInfo, index: number) => {
+                if (isSkaterInfo(player)) {
+                  console.log(player);
                   return (
-                    <TableRow hover tabIndex={-1} key={index}>
+                    <TableRow hover key={index}>
                       <TableCell component="th" scope="row" padding="none">
-                        {row ? row.skaterFullName : ""}
+                        {player
+                          ? player.firstName.default +
+                            " " +
+                            player.lastName.default
+                          : ""}
                       </TableCell>
+                      <TableCell>{player.birthCity.default}</TableCell>
+                      <TableCell>{player.fullTeamName.default}</TableCell>
                       <TableCell align="right">
-                        {row ? row.gamesPlayed : ""}
+                        {player ? player.sweaterNumber : ""}
                       </TableCell>
                     </TableRow>
                   );
-                } else if (isGoalieInfo(row)) {
-                  return <></>;
+                } else if (isGoalieInfo(player)) {
+                  return (
+                    <TableRow hover key={index}>
+                      <TableCell component="th" scope="row" padding="none">
+                        {player
+                          ? player.firstName.default +
+                            " " +
+                            player.lastName.default
+                          : ""}
+                      </TableCell>
+                      <TableCell>{player.birthCity.default}</TableCell>
+                      <TableCell>{player.fullTeamName.default}</TableCell>
+                      <TableCell align="right">
+                        {player ? player.sweaterNumber : ""}
+                      </TableCell>
+                    </TableRow>
+                  );
                 } else {
-                  return <></>;
+                  return (
+                    <>
+                      <TableRow key={index}>
+                        <TableCell>Error</TableCell>
+                      </TableRow>
+                    </>
+                  );
                 }
               })}
             </TableBody>
