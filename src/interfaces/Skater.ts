@@ -29,6 +29,7 @@ type Skater = {
 };
 
 type SkaterInfo = {
+  selectedSeason: string;
   gamesPlayed: number;
   type: "SkaterInfo";
   playerId: number;
