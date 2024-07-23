@@ -223,26 +223,31 @@ export default function PlayerTable({ players }: PlayerTableInterface) {
               <TableRow>
                 {/*Table Rows will need to be dynamic based on filtered stats. Will also need to consider player or goalie favored stat comparisons*/}
                 <TableCell>Name</TableCell>
-                <TableCell align="right">Team</TableCell>
+                <TableCell>Team</TableCell>
+                <TableCell>Jersey Number</TableCell>
+                <TableCell>Games Played</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {visibleRows.map((player: PlayerInfo, index: number) => {
                 if (isSkaterInfo(player)) {
                   console.log(player);
+
+                  const currentSkaterStats = player.seasonTotals.filter(x => x.season.toString() == player.selectedSeason)[0];
+
                   return (
                     <TableRow hover key={index}>
                       <TableCell component="th" scope="row" padding="none">
-                        {player
-                          ? player.firstName.default +
-                            " " +
-                            player.lastName.default
-                          : ""}
+                        {`${player.firstName.default} ${player.lastName.default}`}
                       </TableCell>
-                      <TableCell>{player.birthCity.default}</TableCell>
-                      <TableCell>{player.fullTeamName.default}</TableCell>
-                      <TableCell align="right">
-                        {player ? player.sweaterNumber : ""}
+                      <TableCell component="th" scope="row" padding="none">
+                        {player.fullTeamName.default}
+                      </TableCell>
+                      <TableCell>
+                        {player.sweaterNumber}
+                      </TableCell>
+                      <TableCell>
+                        {currentSkaterStats.points}
                       </TableCell>
                     </TableRow>
                   );

@@ -14,6 +14,11 @@ import {
 } from "../interfaces/Player";
 import { PlayerModalInterface } from "../interfaces/ModalInterface";
 
+
+interface SeasonType {
+  label: string;
+}
+
 const autoCorrectContainer: React.CSSProperties = {
   display: "flex",
   flexDirection: "column",
@@ -44,6 +49,15 @@ PlayerModalInterface) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [selectedPlayer, setSelectedPlayer] = useState<AllPlayers>(null);
+  const [selectedSeason, setSelectedSeason] = useState<string|null>("");
+
+  const seasons: SeasonType[] = [];
+  for(let i = 0 ; i < 50; i++){
+    const currentYear = new Date().getFullYear() - i;
+    const previousYear = currentYear - 1;
+
+    seasons.push({ label: `${previousYear}-${currentYear}` })
+  } 
 
   return (
     <div>
@@ -63,9 +77,16 @@ PlayerModalInterface) => {
             <Autocomplete
               disablePortal
               id="combo-box-demo"
-              options={[{ label: "2023-2024" }]}
+              options={seasons}
               sx={{ width: 300 }}
               renderInput={(params) => <TextField {...params} label="Season" />}
+              onChange={(
+                _e: React.SyntheticEvent<Element, Event>,
+                // Needs to be able to handle both Skaters and Goalies
+                season: SeasonType | null
+              ) => {
+                setSelectedSeason(season?.label ?? null);
+              }}
             />
           </div>
           <div>
@@ -108,7 +129,7 @@ PlayerModalInterface) => {
               className="btn-success"
               variant="contained"
               onClick={
-                () => addPlayer(selectedPlayer)
+                () => addPlayer(selectedPlayer, selectedSeason)
                 // selectedPlayer !== null && selectedPlayer.type === "Skater"
                 //   ? addPlayer(selectedPlayer)
                 //   : // Side effect of the issue on line 76

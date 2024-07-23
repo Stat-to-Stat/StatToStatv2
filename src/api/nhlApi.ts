@@ -31,10 +31,22 @@ const fetchSingleData = async <T>(url: string): Promise<T> => {
 };
 // Single Player Stats and Bio (Goalies included)
 
-export const getPlayer = async (id: number): Promise<AllPlayers> => {
+export const getPlayer = async (id: number, season: string | null = null): Promise<AllPlayers> => {
+  const currentYear = new Date().getFullYear();
+  const previousYear = currentYear - 1;
+
+  season = season == null ? `${currentYear}${previousYear}` : season;
+  season = season.replace(/-/g, "");
+
+  console.log(id);
   const player = await fetchSingleData<AllPlayers>(
-    `/api-web/v1/player/${id}/landing`
+    `/api-web/v1/player/${id}/landing?seasonId=${season}`
   );
+
+  if(player != null){
+    player.selectedSeason = season;
+  }
+
   return player;
 };
 

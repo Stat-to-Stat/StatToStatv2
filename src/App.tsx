@@ -42,15 +42,15 @@ function App() {
   function isGoalie(player: AllPlayers): player is Goalie {
     return player != null && player.type === "Goalie";
   }
-
-  const addPlayer = (player: AllPlayers) => {
+ 
+  const addPlayer = (player: AllPlayers, season: string|null) => {
     if (isSkater(player)) {
-      getPlayer(player.playerId).then((currPlayer: AllPlayers) => {
+      getPlayer(player.playerId, season).then((currPlayer: AllPlayers) => {
         if (currPlayer !== null) currPlayer.type = "SkaterInfo";
         setCurrentPlayers((prevPlayers) => [...prevPlayers, currPlayer]);
       });
     } else if (isGoalie(player)) {
-      getPlayer(player.playerId).then((currPlayer: AllPlayers) => {
+      getPlayer(player.playerId, season).then((currPlayer: AllPlayers) => {
         if (currPlayer !== null) currPlayer.type = "GoalieInfo";
         setCurrentPlayers((prevPlayers) => [...prevPlayers, currPlayer]);
       });
