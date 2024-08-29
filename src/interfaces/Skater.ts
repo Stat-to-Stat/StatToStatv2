@@ -1,4 +1,4 @@
-type Skater = {
+interface Skater {
   type: "Skater";
   assists: number;
   evGoals: number;
@@ -26,9 +26,9 @@ type Skater = {
   skaterFullName: string;
   teamAbbrevs: string;
   timeOnIcePerGame: number;
-};
+}
 
-type SkaterInfo = {
+interface SkaterInfo {
   selectedSeason: string;
   gamesPlayed: number;
   type: "SkaterInfo";
@@ -90,7 +90,7 @@ type SkaterInfo = {
   last5Games: Array<LastGame>;
   seasonTotals: Array<SeasonTotals>;
   awards: Array<Awards>;
-};
+}
 
 type LastGame = {
   assists: number;

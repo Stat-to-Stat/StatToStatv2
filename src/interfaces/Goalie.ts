@@ -1,4 +1,4 @@
-type Goalie = {
+interface Goalie {
   type: "Goalie";
   assists: number;
   gamesPlayed: number;
@@ -23,9 +23,9 @@ type Goalie = {
   ties: null;
   timeOnIce: number;
   wins: number;
-};
+}
 
-type GoalieInfo = {
+interface GoalieInfo {
   type: "GoalieInfo";
   playerId: number;
   isActive: boolean;
@@ -80,7 +80,7 @@ type GoalieInfo = {
   last5Games: Array<LastGame>;
   seasonTotals: Array<SeasonTotals>;
   awards: Array<Awards>;
-};
+}
 
 type FeaturedStats = {
   gamesPlayed: number;

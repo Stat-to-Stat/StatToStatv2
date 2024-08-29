@@ -233,7 +233,9 @@ export default function PlayerTable({ players }: PlayerTableInterface) {
                 if (isSkaterInfo(player)) {
                   console.log(player);
 
-                  const currentSkaterStats = player.seasonTotals.filter(x => x.season.toString() == player.selectedSeason)[0];
+                  const currentSkaterStats = player.seasonTotals.filter(
+                    (x) => x.season.toString() == player.selectedSeason
+                  )[0];
 
                   return (
                     <TableRow hover key={index}>
@@ -243,12 +245,8 @@ export default function PlayerTable({ players }: PlayerTableInterface) {
                       <TableCell component="th" scope="row" padding="none">
                         {player.fullTeamName.default}
                       </TableCell>
-                      <TableCell>
-                        {player.sweaterNumber}
-                      </TableCell>
-                      <TableCell>
-                        {currentSkaterStats.points}
-                      </TableCell>
+                      <TableCell>{player.sweaterNumber}</TableCell>
+                      <TableCell>{currentSkaterStats.points}</TableCell>
                     </TableRow>
                   );
                 } else if (isGoalieInfo(player)) {
