@@ -35,7 +35,11 @@ const SkaterTombstoneHandler = (player: SkaterInfo) => {
         <img src={player.headshot} style={personStyle} />
       </div>
       <div>{dispayName}</div>
-      <div>{player.selectedSeason.slice(0, 4) + '-' + player.selectedSeason.slice(4)}</div>
+      <div>
+        {player.selectedSeason.slice(0, 4) +
+          "-" +
+          player.selectedSeason.slice(4)}
+      </div>
     </div>
   );
 };

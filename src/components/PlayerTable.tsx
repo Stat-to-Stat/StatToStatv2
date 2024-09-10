@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   Paper,
   TableSortLabel,
@@ -11,275 +11,179 @@ import {
   Box,
 } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
+import { GoalieInfo } from "../interfaces/Goalie";
+import { SkaterInfo } from "../interfaces/Skater";
+import { PlayerInfo, SeasonField } from "../interfaces/Player";
 
-// import { Goalies, Skaters } from "../interfaces/Player";
-import { Goalie, GoalieInfo } from "../interfaces/Goalie";
-import { Skater, SkaterInfo } from "../interfaces/Skater";
-import { PlayerInfo } from "../interfaces/Player";
+type Order = "asc" | "desc";
+type SortableKey = keyof SkaterInfo | keyof GoalieInfo | keyof SeasonField;
 
-interface PlayerTableInterface {
+interface PlayerTableProps {
   players: PlayerInfo[];
 }
 
-interface HeadCell {
-  disablePadding: boolean;
-  id: keyof Skater | keyof Goalie;
-  label: string;
+interface TableHeaderName {
+  key: SortableKey;
+  name: string;
   numeric: boolean;
 }
 
-interface EnhancedTableProps {
-  numSelected?: number;
-  onRequestSort: (
-    event: React.MouseEvent<HTMLButtonElement>,
-    headerId: keyof Skater | keyof Goalie
-  ) => void;
-  onSelectAllClick?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+interface EnhancedTableHeadProps {
   order: Order;
-  orderBy: string;
-  rowCount: number;
+  orderBy: SortableKey;
+  onRequestSort: (property: SortableKey) => void;
   tableHeaders: TableHeaderName[];
 }
 
-interface TableHeaderName {
-  name: string;
-  key: keyof Goalie | keyof Skater;
-  numeric: boolean;
-}
+const isSkaterInfo = (player: PlayerInfo): player is SkaterInfo =>
+  player !== null && "seasonTotals" in player && "skaterFullName" in player;
 
-type Order = "asc" | "desc";
+const isGoalieInfo = (player: PlayerInfo): player is GoalieInfo =>
+  player !== null && "seasonTotals" in player && "goalieFullName" in player;
 
-function isSkater(player: PlayerInfo | null): player is SkaterInfo {
-  return player != null && player.type === "SkaterInfo";
-}
+const isSeasonField = (player: PlayerInfo): player is SeasonField =>
+  player !== null && "selectedSeason" in player;
 
-function isGoalie(player: PlayerInfo | null): player is GoalieInfo {
-  return player != null && player.type === "GoalieInfo";
-}
-
-function isSkaterInfo(player: PlayerInfo | null): player is SkaterInfo {
-  return player != null && player.type === "SkaterInfo";
-}
-
-function isGoalieInfo(player: PlayerInfo | null): player is GoalieInfo {
-  return player != null && player.type === "GoalieInfo";
-}
-
-// function isGoalieInfo(player: GoalieInfo | null): player is GoalieInfo {
-//   return player !== null && player.type === "GoalieInfo";
-// }
-
-function descendingComparator(
+const descendingComparator = (
   a: PlayerInfo,
   b: PlayerInfo,
-  orderBy: keyof Skater | keyof Goalie
-): number {
-  if (!a && !b) return 0;
-  if (!a) return 1;
-  if (!b) return -1;
-
-  const isNotSkater = !isSkater(a) || !isSkater(b);
-  const isNotGoalie = !isGoalie(a) || !isGoalie(b);
-
-  if (isNotSkater && isNotGoalie) {
-    return 0;
-  }
-
-  if (!isNotSkater) {
-    orderBy = orderBy as keyof Skater;
-
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
-  } else if (!isNotGoalie) {
-    orderBy = orderBy as keyof Goalie;
-
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
-  }
-
+  orderBy: SortableKey
+): number => {
+  if (!a || !b) return 0;
+  if (isSeasonField(a) || isSeasonField(b)) return 0;
+  if (a[orderBy] < b[orderBy]) return 1;
+  if (a[orderBy] > b[orderBy]) return -1;
   return 0;
-}
+};
 
-function getComparator<Key extends keyof Skater | keyof Goalie>(
+const getComparator = (
   order: Order,
-  orderBy: Key
-): (a: PlayerInfo, b: PlayerInfo) => number {
-  return order === "desc"
+  orderBy: SortableKey
+): ((a: PlayerInfo, b: PlayerInfo) => number) =>
+  order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
-}
 
-function stableSort<T>(
-  array: readonly T[],
-  comparator: (a: T, b: T) => number
-) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
+const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = ({
+  order,
+  orderBy,
+  onRequestSort,
+  tableHeaders,
+}) => (
+  <TableHead>
+    <TableRow>
+      {tableHeaders.map((header) => (
+        <TableCell
+          key={header.key}
+          align={header.numeric ? "right" : "left"}
+          sortDirection={orderBy === header.key ? order : false}>
+          <TableSortLabel
+            active={orderBy === header.key}
+            direction={orderBy === header.key ? order : "asc"}
+            onClick={() => onRequestSort(header.key)}>
+            {header.name}
+            {orderBy === header.key && (
+              <Box component="span" sx={visuallyHidden}>
+                {order === "desc" ? "sorted descending" : "sorted ascending"}
+              </Box>
+            )}
+          </TableSortLabel>
+        </TableCell>
+      ))}
+    </TableRow>
+  </TableHead>
+);
 
-function EnhancedTableHead(props: EnhancedTableProps) {
-  const { order, orderBy, onRequestSort, tableHeaders } = props;
-
-  const createSortHandler =
-    (headerId: keyof Skater | keyof Goalie) =>
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      onRequestSort(event, headerId);
-    };
-
-  const headCells: readonly HeadCell[] = tableHeaders.map<HeadCell>(
-    (tableHeader) => ({
-      id: tableHeader.key,
-      numeric: tableHeader.numeric,
-      disablePadding: false,
-      label: tableHeader.name,
-    })
-  );
-
-  return (
-    <TableHead>
-      <TableRow>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
-
-export default function PlayerTable({ players }: PlayerTableInterface) {
+const PlayerTable: React.FC<PlayerTableProps> = ({ players }) => {
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<keyof Skater | keyof Goalie>(
-    "skaterFullName"
-  );
+  const [orderBy, setOrderBy] = useState<SortableKey>("firstName");
 
-  const handleRequestSort = (
-    _e: React.MouseEvent<HTMLButtonElement>,
-    headerId: keyof Skater | keyof Goalie
-  ) => {
-    const isAsc = orderBy === headerId && order === "asc";
+  useEffect(() => {
+    console.log("Players data:", players);
+  }, [players]);
+
+  const handleRequestSort = (property: SortableKey) => {
+    const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(headerId);
+    setOrderBy(property);
   };
 
-  const visibleRows: PlayerInfo[] = useMemo(
-    () => stableSort<PlayerInfo>(players, getComparator(order, orderBy)),
+  const sortedRows = useMemo(
+    () => [...players].sort(getComparator(order, orderBy)),
     [order, orderBy, players]
   );
 
-  // Will be needed to be changed dynamicly from table stats state/hook from modal to here
   const tableHeaders: TableHeaderName[] = [
-    { key: "skaterFullName", name: "Full Name", numeric: false },
+    { key: "firstName", name: "Name", numeric: false },
+    { key: "fullTeamName", name: "Team", numeric: false },
+    { key: "sweaterNumber", name: "Jersey Number", numeric: true },
     { key: "gamesPlayed", name: "Games Played", numeric: true },
   ];
 
-  // In future maybe make rows for players dynamic aligning with dynamic headers, and handle N/A stats
-  /// N/A stat example: Stat for goals, Goalie doesn't have it? Display "N/A" for that stat
+  const getPlayerName = (player: PlayerInfo) => {
+    console.log("Getting name for player:", player);
+    if (isSkaterInfo(player)) {
+      return player.firstName.default + " " + player.lastName.default || "N/A";
+    }
+    if (isGoalieInfo(player)) {
+      return player.firstName.default + " " + player.lastName.default || "N/A";
+    }
+    return "N/A";
+  };
+
+  const getPlayerTeam = (player: PlayerInfo) => {
+    console.log("Getting team for player:", player);
+    if (isSkaterInfo(player) || isGoalieInfo(player)) {
+      return player.fullTeamName?.default || "N/A";
+    }
+    return "N/A";
+  };
+
+  const getPlayerNumber = (player: PlayerInfo) => {
+    console.log("Getting number for player:", player);
+    if (isSkaterInfo(player) || isGoalieInfo(player)) {
+      return player.sweaterNumber || "N/A";
+    }
+    return "N/A";
+  };
+
+  const getPlayerGamesPlayed = (player: PlayerInfo) => {
+    console.log("Getting games played for player:", player);
+    if (isSkaterInfo(player) || isGoalieInfo(player)) {
+      const stats = player.seasonTotals.find(
+        (stats) => stats.season.toString() === player.selectedSeason
+      );
+      return stats?.gamesPlayed ?? "N/A";
+    }
+    return "N/A";
+  };
+
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <TableContainer>
           <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
-            {/* <EnhancedTableHead
+            <EnhancedTableHead
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
-              rowCount={players.length}
               tableHeaders={tableHeaders}
-            /> */}
-            <TableHead>
-              <TableRow>
-                {/*Table Rows will need to be dynamic based on filtered stats. Will also need to consider player or goalie favored stat comparisons*/}
-                <TableCell>Name</TableCell>
-                <TableCell>Team</TableCell>
-                <TableCell>Jersey Number</TableCell>
-                <TableCell>Games Played</TableCell>
-              </TableRow>
-            </TableHead>
+            />
             <TableBody>
-              {visibleRows.map((player: PlayerInfo, index: number) => {
-                if (isSkaterInfo(player)) {
-                  console.log(player);
-
-                  const currentSkaterStats = player.seasonTotals.filter(
-                    (x) => x.season.toString() == player.selectedSeason
-                  )[0];
-
-                  return (
-                    <TableRow hover key={index}>
-                      <TableCell component="th" scope="row" padding="none">
-                        {`${player.firstName.default} ${player.lastName.default}`}
-                      </TableCell>
-                      <TableCell component="th" scope="row" padding="none">
-                        {player.fullTeamName.default}
-                      </TableCell>
-                      <TableCell>{player.sweaterNumber}</TableCell>
-                      <TableCell>{currentSkaterStats.points}</TableCell>
-                    </TableRow>
-                  );
-                } else if (isGoalieInfo(player)) {
-                  return (
-                    <TableRow hover key={index}>
-                      <TableCell component="th" scope="row" padding="none">
-                        {player
-                          ? player.firstName.default +
-                            " " +
-                            player.lastName.default
-                          : ""}
-                      </TableCell>
-                      <TableCell>{player.birthCity.default}</TableCell>
-                      <TableCell>{player.fullTeamName.default}</TableCell>
-                      <TableCell align="right">
-                        {player ? player.sweaterNumber : ""}
-                      </TableCell>
-                    </TableRow>
-                  );
-                } else {
-                  return (
-                    <>
-                      <TableRow key={index}>
-                        <TableCell>Error</TableCell>
-                      </TableRow>
-                    </>
-                  );
-                }
-              })}
+              {sortedRows.map((player, index) => (
+                <TableRow hover key={index}>
+                  <TableCell>{getPlayerName(player)}</TableCell>
+                  <TableCell>{getPlayerTeam(player)}</TableCell>
+                  <TableCell>{getPlayerNumber(player)}</TableCell>
+                  <TableCell>{getPlayerGamesPlayed(player)}</TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
       </Paper>
     </Box>
   );
-}
+};
+
+export default PlayerTable;

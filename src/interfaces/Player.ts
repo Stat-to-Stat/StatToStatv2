@@ -19,4 +19,5 @@ export type {
   Skater,
   Skaters,
   SkaterInfo,
+  SeasonField,
 };

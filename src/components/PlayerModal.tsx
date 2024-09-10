@@ -14,7 +14,6 @@ import {
 } from "../interfaces/Player";
 import { PlayerModalInterface } from "../interfaces/ModalInterface";
 
-
 interface SeasonType {
   label: string;
 }
@@ -49,15 +48,15 @@ PlayerModalInterface) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [selectedPlayer, setSelectedPlayer] = useState<AllPlayers>(null);
-  const [selectedSeason, setSelectedSeason] = useState<string|null>("");
+  const [selectedSeason, setSelectedSeason] = useState<string | null>("");
 
   const seasons: SeasonType[] = [];
-  for(let i = 0 ; i < 50; i++){
+  for (let i = 0; i < 50; i++) {
     const currentYear = new Date().getFullYear() - i;
     const previousYear = currentYear - 1;
 
-    seasons.push({ label: `${previousYear}-${currentYear}` })
-  } 
+    seasons.push({ label: `${previousYear}-${currentYear}` });
+  }
 
   return (
     <div>
@@ -67,8 +66,7 @@ PlayerModalInterface) => {
       <ModalTemplate
         isOpen={open}
         handleOpen={handleOpen}
-        handleClose={handleClose}
-      >
+        handleClose={handleClose}>
         <Typography id="modal-title" variant="h6" component="h2">
           {modalName}
         </Typography>
@@ -134,15 +132,13 @@ PlayerModalInterface) => {
                 //   ? addPlayer(selectedPlayer)
                 //   : // Side effect of the issue on line 76
                 //     addGoalie(selectedPlayer)
-              }
-            >
+              }>
               Add
             </Button>
             <Button
               className="btn-failure"
               variant="contained"
-              onClick={() => setOpen(!open)}
-            >
+              onClick={() => setOpen(!open)}>
               Cancel
             </Button>
           </div>
