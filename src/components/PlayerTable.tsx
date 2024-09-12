@@ -117,46 +117,57 @@ const PlayerTable: React.FC<PlayerTableProps> = ({ players }) => {
   function toCamelCase(str: string) {
     return str
       .toLowerCase()
-      .replace(/[^a-zA-Z0-9]/g, ' ')
-      .split(' ')
+      .replace(/[^a-zA-Z0-9]/g, " ")
+      .split(" ")
       .filter(Boolean)
       .map((word, index) => {
-        return index === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1);
+        return index === 0
+          ? word
+          : word.charAt(0).toUpperCase() + word.slice(1);
       })
-      .join('');
+      .join("");
   }
 
-  // As a React States
-  const skaterStatHeaders: HeaderInterface[] = [ 
+  // As a React State
+  const skaterStatHeaders: HeaderInterface[] = [
     {
       header: "First Name",
       isNumeric: false,
-      keys: ["firstName","default"]
+      keys: ["firstName", "default"],
     },
     {
       header: "Team Name",
       isNumeric: false,
-      keys: ["fullTeamName","default"]
+      keys: ["fullTeamName", "default"],
     },
     {
       header: "Jersey",
       isNumeric: true,
-      keys: ["sweaterNumber"]
-    }
+      keys: ["sweaterNumber"],
+    },
   ];
 
-  const skaterTableHeaders: TableHeaderName[] = skaterStatHeaders.map(skaterStatHeader => {
-    return { key: toCamelCase(skaterStatHeader.header), name: skaterStatHeader.header, numeric: skaterStatHeader.isNumeric }
-  })
+  const skaterTableHeaders: TableHeaderName[] = skaterStatHeaders.map(
+    (skaterStatHeader) => {
+      return {
+        key: toCamelCase(skaterStatHeader.header),
+        name: skaterStatHeader.header,
+        numeric: skaterStatHeader.isNumeric,
+      };
+    }
+  );
 
-  function getPlayerStat(player: PlayerInfo, statHeader: HeaderInterface): string {
-    console.log("hit")
-    if(player == null) return "N/A";
+  function getPlayerStat(
+    player: PlayerInfo,
+    statHeader: HeaderInterface
+  ): string {
+    console.log("hit");
+    if (player == null) return "N/A";
 
     let playerValue: any = player;
-    statHeader.keys.forEach(stat => {
+    statHeader.keys.forEach((stat) => {
       playerValue = playerValue[stat];
-    })
+    });
 
     return playerValue;
   }
@@ -179,7 +190,9 @@ const PlayerTable: React.FC<PlayerTableProps> = ({ players }) => {
 
                 <TableRow hover key={index}>
                   {skaterStatHeaders.map((statHeader, index) => (
-                    <TableCell key={index}>{getPlayerStat(player, statHeader)}</TableCell>
+                    <TableCell key={index}>
+                      {getPlayerStat(player, statHeader)}
+                    </TableCell>
                   ))}
                 </TableRow>
               ))}
