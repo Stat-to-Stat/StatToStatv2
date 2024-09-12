@@ -1,14 +1,38 @@
 import { useState } from "react";
 import Button from "@mui/material/Button";
 import ModalTemplate from "./ModalTemplate";
-import Typography from "@mui/material/Typography";
 
-import { ModalInterface } from "../interfaces/ModalInterface";
+import { HeaderInterface, ModalInterface } from "../interfaces/ModalInterface";
+import { FormControl, FormControlLabel, FormGroup, FormLabel, Switch } from "@mui/material";
 
 const FilterModal = ({ modalName }: ModalInterface) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const skaterStatHeaders: HeaderInterface[] = [ 
+    {
+      header: "First Name",
+      isNumeric: false,
+      keys: ["firstName","default"]
+    },
+    {
+      header: "Team Name",
+      isNumeric: false,
+      keys: ["fullTeamName","default"]
+    },
+    {
+      header: "Jersey",
+      isNumeric: true,
+      keys: ["sweaterNumber"]
+    }
+  ];
+
+  const addSkaterStatHeader = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.checked);
+    console.log(event.target.name);
+    console.log(event.target.value);
+  };
 
   return (
     <div>
@@ -19,12 +43,21 @@ const FilterModal = ({ modalName }: ModalInterface) => {
         isOpen={open}
         handleOpen={handleOpen}
         handleClose={handleClose}>
-        <Typography id="modal-title" variant="h6" component="h2">
-          Text in a modal
-        </Typography>
-        <Typography id="modal-description" sx={{ mt: 2 }}>
-          Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-        </Typography>
+        <FormControl component="fieldset" variant="standard">
+          <FormLabel component="legend">Assign responsibility</FormLabel>
+          <FormGroup>
+            {skaterStatHeaders.map(skaterStatHeader => {
+              return(
+                <FormControlLabel
+                control={
+                  <Switch onChange={addSkaterStatHeader} name={skaterStatHeader.header} value={skaterStatHeader.keys} />
+                }
+                label={skaterStatHeader.header}
+                />
+              )
+            })}
+          </FormGroup>
+        </FormControl>
       </ModalTemplate>
     </div>
   );

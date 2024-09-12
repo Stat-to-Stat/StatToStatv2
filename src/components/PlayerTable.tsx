@@ -14,16 +14,17 @@ import { visuallyHidden } from "@mui/utils";
 import { GoalieInfo } from "../interfaces/Goalie";
 import { SkaterInfo } from "../interfaces/Skater";
 import { PlayerInfo, SeasonField } from "../interfaces/Player";
+import { HeaderInterface } from "../interfaces/ModalInterface";
 
 type Order = "asc" | "desc";
-type SortableKey = keyof SkaterInfo | keyof GoalieInfo | keyof SeasonField;
+// type SortableKey = keyof SkaterInfo | keyof GoalieInfo | keyof SeasonField;
 
 interface PlayerTableProps {
   players: PlayerInfo[];
 }
 
 interface TableHeaderName {
-  key: SortableKey;
+  key: string;
   name: string;
   numeric: boolean;
 }
@@ -75,7 +76,7 @@ const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = ({
       {tableHeaders.map((header) => (
         <TableCell
           key={header.key}
-          align={header.numeric ? "right" : "left"}
+          align="left"
           sortDirection={orderBy === header.key ? order : false}>
           <TableSortLabel
             active={orderBy === header.key}
@@ -96,13 +97,13 @@ const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = ({
 
 const PlayerTable: React.FC<PlayerTableProps> = ({ players }) => {
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<SortableKey>("firstName");
+  const [orderBy, setOrderBy] = useState<string>("firstName");
 
   useEffect(() => {
     console.log("Players data:", players);
   }, [players]);
 
-  const handleRequestSort = (property: SortableKey) => {
+  const handleRequestSort = (property: string) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
@@ -113,50 +114,52 @@ const PlayerTable: React.FC<PlayerTableProps> = ({ players }) => {
     [order, orderBy, players]
   );
 
-  const tableHeaders: TableHeaderName[] = [
-    { key: "firstName", name: "Name", numeric: false },
-    { key: "fullTeamName", name: "Team", numeric: false },
-    { key: "sweaterNumber", name: "Jersey Number", numeric: true },
-    { key: "gamesPlayed", name: "Games Played", numeric: true },
+  function toCamelCase(str: string) {
+    return str
+      .toLowerCase()
+      .replace(/[^a-zA-Z0-9]/g, ' ')
+      .split(' ')
+      .filter(Boolean)
+      .map((word, index) => {
+        return index === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join('');
+  }
+
+  // As a React States
+  const skaterStatHeaders: HeaderInterface[] = [ 
+    {
+      header: "First Name",
+      isNumeric: false,
+      keys: ["firstName","default"]
+    },
+    {
+      header: "Team Name",
+      isNumeric: false,
+      keys: ["fullTeamName","default"]
+    },
+    {
+      header: "Jersey",
+      isNumeric: true,
+      keys: ["sweaterNumber"]
+    }
   ];
 
-  const getPlayerName = (player: PlayerInfo) => {
-    console.log("Getting name for player:", player);
-    if (isSkaterInfo(player)) {
-      return player.firstName.default + " " + player.lastName.default || "N/A";
-    }
-    if (isGoalieInfo(player)) {
-      return player.firstName.default + " " + player.lastName.default || "N/A";
-    }
-    return "N/A";
-  };
+  const skaterTableHeaders: TableHeaderName[] = skaterStatHeaders.map(skaterStatHeader => {
+    return { key: toCamelCase(skaterStatHeader.header), name: skaterStatHeader.header, numeric: skaterStatHeader.isNumeric }
+  })
 
-  const getPlayerTeam = (player: PlayerInfo) => {
-    console.log("Getting team for player:", player);
-    if (isSkaterInfo(player) || isGoalieInfo(player)) {
-      return player.fullTeamName?.default || "N/A";
-    }
-    return "N/A";
-  };
+  function getPlayerStat(player: PlayerInfo, statHeader: HeaderInterface): string {
+    console.log("hit")
+    if(player == null) return "N/A";
 
-  const getPlayerNumber = (player: PlayerInfo) => {
-    console.log("Getting number for player:", player);
-    if (isSkaterInfo(player) || isGoalieInfo(player)) {
-      return player.sweaterNumber || "N/A";
-    }
-    return "N/A";
-  };
+    let playerValue: any = player;
+    statHeader.keys.forEach(stat => {
+      playerValue = playerValue[stat];
+    })
 
-  const getPlayerGamesPlayed = (player: PlayerInfo) => {
-    console.log("Getting games played for player:", player);
-    if (isSkaterInfo(player) || isGoalieInfo(player)) {
-      const stats = player.seasonTotals.find(
-        (stats) => stats.season.toString() === player.selectedSeason
-      );
-      return stats?.gamesPlayed ?? "N/A";
-    }
-    return "N/A";
-  };
+    return playerValue;
+  }
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -167,9 +170,23 @@ const PlayerTable: React.FC<PlayerTableProps> = ({ players }) => {
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
-              tableHeaders={tableHeaders}
+              tableHeaders={skaterTableHeaders}
             />
+
             <TableBody>
+              {sortedRows.map((player, index) => (
+                // if(player is not Skater) return;
+
+                <TableRow hover key={index}>
+                  {skaterStatHeaders.map((statHeader, index) => (
+                    <TableCell key={index}>{getPlayerStat(player, statHeader)}</TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+
+            {/* Goalie Body */}
+            {/* <TableBody>
               {sortedRows.map((player, index) => (
                 <TableRow hover key={index}>
                   <TableCell>{getPlayerName(player)}</TableCell>
@@ -178,7 +195,7 @@ const PlayerTable: React.FC<PlayerTableProps> = ({ players }) => {
                   <TableCell>{getPlayerGamesPlayed(player)}</TableCell>
                 </TableRow>
               ))}
-            </TableBody>
+            </TableBody> */}
           </Table>
         </TableContainer>
       </Paper>
