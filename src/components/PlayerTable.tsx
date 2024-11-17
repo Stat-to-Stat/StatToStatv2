@@ -129,11 +129,17 @@ const PlayerTable: React.FC<PlayerTableProps> = ({ players }) => {
   }
 
   // As a React State
+  // How do we make this dynamic?
   const skaterStatHeaders: HeaderInterface[] = [
     {
       header: "First Name",
       isNumeric: false,
       keys: ["firstName", "default"],
+    },
+    {
+      header: "Last Name",
+      isNumeric: false,
+      keys: ["lastName", "default"],
     },
     {
       header: "Team Name",
@@ -167,6 +173,7 @@ const PlayerTable: React.FC<PlayerTableProps> = ({ players }) => {
     let playerValue: any = player;
     statHeader.keys.forEach((stat) => {
       playerValue = playerValue[stat];
+      console.log(playerValue);
     });
 
     return playerValue;

@@ -16,11 +16,17 @@ const FilterModal = ({ modalName }: ModalInterface) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  // How do we make this dynamic?
   const skaterStatHeaders: HeaderInterface[] = [
     {
       header: "First Name",
       isNumeric: false,
       keys: ["firstName", "default"],
+    },
+    {
+      header: "Last Name",
+      isNumeric: false,
+      keys: ["lasttName", "default"],
     },
     {
       header: "Team Name",

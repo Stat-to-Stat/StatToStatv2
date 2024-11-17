@@ -17,7 +17,7 @@ interface HeaderInterface {
 
 interface PlayerModalInterface extends ModalInterface {
   players: AllPlayers[];
-  addPlayer: (player: AllPlayers, season: string|null) => void;
+  addPlayer: (player: AllPlayers, season: string | null) => void;
 }
 
 export type { ModalInterface, PlayerModalInterface, HeaderInterface };
