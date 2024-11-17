@@ -11,12 +11,13 @@ import {
   Switch,
 } from "@mui/material";
 
-const FilterModal = ({ modalName }: ModalInterface) => {
+const FilterModal = ({ modalName, currentSkaterHeaders: skaterHeaders, setCurrentSkaterHeaders: setSkaterHeaders }: ModalInterface) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  // How do we make this dynamic?
+  skaterHeaders = skaterHeaders == null ? [] : skaterHeaders;
+
   const skaterStatHeaders: HeaderInterface[] = [
     {
       header: "First Name",
@@ -38,12 +39,34 @@ const FilterModal = ({ modalName }: ModalInterface) => {
       isNumeric: true,
       keys: ["sweaterNumber"],
     },
+    {
+      header: "Regular Season Career Goals",
+      isNumeric: true,
+      keys: ["careerTotals","regularSeason","goals"]
+    }
   ];
 
-  const addSkaterStatHeader = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const manageSkaterStatHeader = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log(event.target.checked);
     console.log(event.target.name);
     console.log(event.target.value);
+
+    const checked = event.target.checked;
+    const header = event.target.name;
+    const currentlyContains = !!skaterHeaders.find(x => x.header === header)
+    const headerInfo = skaterStatHeaders.find(x => x.header === header);
+
+    if(!headerInfo){
+      return;
+    }
+
+    if(!checked && currentlyContains){
+      setSkaterHeaders(skaterHeaders.filter(x => x.header !== headerInfo.header));
+    }
+
+    if(checked && !currentlyContains){
+      setSkaterHeaders([...skaterHeaders, headerInfo]);
+    }
   };
 
   return (
@@ -63,9 +86,10 @@ const FilterModal = ({ modalName }: ModalInterface) => {
                 <FormControlLabel
                   control={
                     <Switch
-                      onChange={addSkaterStatHeader}
+                      onChange={manageSkaterStatHeader}
                       name={skaterStatHeader.header}
                       value={skaterStatHeader.keys}
+                      checked={!!skaterHeaders.find(x => x.header === skaterStatHeader.header)}
                     />
                   }
                   label={skaterStatHeader.header}

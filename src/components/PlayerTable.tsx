@@ -21,6 +21,7 @@ type Order = "asc" | "desc";
 
 interface PlayerTableProps {
   players: PlayerInfo[];
+  currentSkaterHeaders: HeaderInterface[];
 }
 
 interface TableHeaderName {
@@ -95,7 +96,7 @@ const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = ({
   </TableHead>
 );
 
-const PlayerTable: React.FC<PlayerTableProps> = ({ players }) => {
+const PlayerTable: React.FC<PlayerTableProps> = ({ players, currentSkaterHeaders: skaterHeaders }) => {
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<string>("firstName");
 
@@ -128,32 +129,7 @@ const PlayerTable: React.FC<PlayerTableProps> = ({ players }) => {
       .join("");
   }
 
-  // As a React State
-  // How do we make this dynamic?
-  const skaterStatHeaders: HeaderInterface[] = [
-    {
-      header: "First Name",
-      isNumeric: false,
-      keys: ["firstName", "default"],
-    },
-    {
-      header: "Last Name",
-      isNumeric: false,
-      keys: ["lastName", "default"],
-    },
-    {
-      header: "Team Name",
-      isNumeric: false,
-      keys: ["fullTeamName", "default"],
-    },
-    {
-      header: "Jersey",
-      isNumeric: true,
-      keys: ["sweaterNumber"],
-    },
-  ];
-
-  const skaterTableHeaders: TableHeaderName[] = skaterStatHeaders.map(
+  const skaterTableHeaders: TableHeaderName[] = skaterHeaders.map(
     (skaterStatHeader) => {
       return {
         key: toCamelCase(skaterStatHeader.header),
@@ -196,7 +172,7 @@ const PlayerTable: React.FC<PlayerTableProps> = ({ players }) => {
                 // if(player is not Skater) return;
 
                 <TableRow hover key={index}>
-                  {skaterStatHeaders.map((statHeader, index) => (
+                  {skaterHeaders.map((statHeader, index) => (
                     <TableCell key={index}>
                       {getPlayerStat(player, statHeader)}
                     </TableCell>

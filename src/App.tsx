@@ -9,6 +9,7 @@ import { Goalie, GoalieInfo } from "./interfaces/Goalie";
 import { Skater, SkaterInfo } from "./interfaces/Skater";
 import { getAllPlayers, getPlayer } from "./api/nhlApi";
 import "./App.css";
+import { HeaderInterface } from "./interfaces/ModalInterface";
 
 // const tombStoneSeperator: React.CSSProperties = {
 //   backgroundColor: 'rgb(46 55 95)',
@@ -20,6 +21,29 @@ function App() {
   // For player drop down
   const [playerList, setPlayerList] = useState<AllPlayers[]>([]);
   const [currentPlayers, setCurrentPlayers] = useState<AllPlayers[]>([]);
+
+  const [currentSkaterHeaders, setCurrentSkaterHeaders] = useState<HeaderInterface[]>([
+    {
+      header: "First Name",
+      isNumeric: false,
+      keys: ["firstName", "default"],
+    },
+    {
+      header: "Last Name",
+      isNumeric: false,
+      keys: ["lastName", "default"],
+    },
+    {
+      header: "Team Name",
+      isNumeric: false,
+      keys: ["fullTeamName", "default"],
+    },
+    {
+      header: "Jersey",
+      isNumeric: true,
+      keys: ["sweaterNumber"],
+    }
+  ]);
 
   // Get players
   useEffect(() => {
@@ -72,15 +96,17 @@ function App() {
             : null}
         </div>
         <div className="row gap-sm">
-          <FilterModal modalName={"Filter Stats"} />
+          <FilterModal modalName={"Filter Stats"} currentSkaterHeaders={currentSkaterHeaders} setCurrentSkaterHeaders={setCurrentSkaterHeaders} />
           <PlayerModal
             modalName={"Add Player"}
             players={playerList}
+            currentSkaterHeaders={currentSkaterHeaders}
             addPlayer={addPlayer}
+            setCurrentSkaterHeaders={setCurrentSkaterHeaders}
           />
         </div>
         {/* Will need to pass in selected players, or an array of players to display their data */}
-        <PlayerTable players={currentPlayers} />
+        <PlayerTable players={currentPlayers} currentSkaterHeaders={currentSkaterHeaders} />
       </div>
     </div>
   );

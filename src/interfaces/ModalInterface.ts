@@ -7,6 +7,8 @@ interface ModalInterface {
   handleOpen?: () => void;
   handleClose?: () => void;
   children?: ReactNode;
+  currentSkaterHeaders?: HeaderInterface[];
+  setCurrentSkaterHeaders: (headers: HeaderInterface[]) => void;
 }
 
 interface HeaderInterface {
