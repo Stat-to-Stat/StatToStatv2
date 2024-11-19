@@ -22,7 +22,9 @@ function App() {
   const [playerList, setPlayerList] = useState<AllPlayers[]>([]);
   const [currentPlayers, setCurrentPlayers] = useState<AllPlayers[]>([]);
 
-  const [currentSkaterHeaders, setCurrentSkaterHeaders] = useState<HeaderInterface[]>([
+  const [currentSkaterHeaders, setCurrentSkaterHeaders] = useState<
+    HeaderInterface[]
+  >([
     {
       header: "First Name",
       isNumeric: false,
@@ -34,15 +36,15 @@ function App() {
       keys: ["lastName", "default"],
     },
     {
-      header: "Team Name",
+      header: "Team",
       isNumeric: false,
       keys: ["fullTeamName", "default"],
     },
     {
-      header: "Jersey",
+      header: "Number",
       isNumeric: true,
       keys: ["sweaterNumber"],
-    }
+    },
   ]);
 
   // Get players
@@ -66,8 +68,8 @@ function App() {
   function isGoalie(player: AllPlayers): player is Goalie {
     return player != null && player.type === "Goalie";
   }
- 
-  const addPlayer = (player: AllPlayers, season: string|null) => {
+
+  const addPlayer = (player: AllPlayers, season: string | null) => {
     if (isSkater(player)) {
       getPlayer(player.playerId, season).then((currPlayer: AllPlayers) => {
         if (currPlayer !== null) currPlayer.type = "SkaterInfo";
@@ -96,7 +98,11 @@ function App() {
             : null}
         </div>
         <div className="row gap-sm">
-          <FilterModal modalName={"Filter Stats"} currentSkaterHeaders={currentSkaterHeaders} setCurrentSkaterHeaders={setCurrentSkaterHeaders} />
+          <FilterModal
+            modalName={"Filter Stats"}
+            currentSkaterHeaders={currentSkaterHeaders}
+            setCurrentSkaterHeaders={setCurrentSkaterHeaders}
+          />
           <PlayerModal
             modalName={"Add Player"}
             players={playerList}
@@ -106,7 +112,10 @@ function App() {
           />
         </div>
         {/* Will need to pass in selected players, or an array of players to display their data */}
-        <PlayerTable players={currentPlayers} currentSkaterHeaders={currentSkaterHeaders} />
+        <PlayerTable
+          players={currentPlayers}
+          currentSkaterHeaders={currentSkaterHeaders}
+        />
       </div>
     </div>
   );

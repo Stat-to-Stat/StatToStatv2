@@ -96,13 +96,16 @@ const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = ({
   </TableHead>
 );
 
-const PlayerTable: React.FC<PlayerTableProps> = ({ players, currentSkaterHeaders: skaterHeaders }) => {
+const PlayerTable: React.FC<PlayerTableProps> = ({
+  players,
+  currentSkaterHeaders: skaterHeaders,
+}) => {
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<string>("firstName");
 
-  useEffect(() => {
-    console.log("Players data:", players);
-  }, [players]);
+  // useEffect(() => {
+  //   console.log("Players data:", players);
+  // }, [players]);
 
   const handleRequestSort = (property: string) => {
     const isAsc = orderBy === property && order === "asc";

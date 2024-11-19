@@ -11,7 +11,11 @@ import {
   Switch,
 } from "@mui/material";
 
-const FilterModal = ({ modalName, currentSkaterHeaders: skaterHeaders, setCurrentSkaterHeaders: setSkaterHeaders }: ModalInterface) => {
+const FilterModal = ({
+  modalName,
+  currentSkaterHeaders: skaterHeaders,
+  setCurrentSkaterHeaders: setSkaterHeaders,
+}: ModalInterface) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -30,41 +34,110 @@ const FilterModal = ({ modalName, currentSkaterHeaders: skaterHeaders, setCurren
       keys: ["lasttName", "default"],
     },
     {
-      header: "Team Name",
+      header: "Team",
       isNumeric: false,
       keys: ["fullTeamName", "default"],
     },
     {
-      header: "Jersey",
+      header: "Number",
       isNumeric: true,
       keys: ["sweaterNumber"],
     },
     {
-      header: "Regular Season Career Goals",
+      header: "Career Goals (Reg)",
       isNumeric: true,
-      keys: ["careerTotals","regularSeason","goals"]
-    }
+      keys: ["careerTotals", "regularSeason", "goals"],
+    },
+    {
+      header: "Goals",
+      isNumeric: true,
+      keys: ["featuredStats", "regularSeason", "subSeason", "goals"],
+    },
+    {
+      header: "Assists",
+      isNumeric: true,
+      keys: ["featuredStats", "regularSeason", "subSeason", "assists"],
+    },
+    {
+      header: "Points",
+      isNumeric: true,
+      keys: ["featuredStats", "regularSeason", "subSeason", "points"],
+    },
+    {
+      header: "Penalty Minutes",
+      isNumeric: true,
+      keys: ["featuredStats", "regularSeason", "subSeason", "penaltyMins"],
+    },
+    {
+      header: "Game Winning Goals",
+      isNumeric: true,
+      keys: ["featuredStats", "regularSeason", "subSeason", "gameWinningGoals"],
+    },
+    {
+      header: "Shots",
+      isNumeric: true,
+      keys: ["featuredStats", "regularSeason", "subSeason", "shots"],
+    },
+    {
+      header: "Shooting %",
+      isNumeric: true,
+      keys: ["featuredStats", "regularSeason", "subSeason", "shootingPctg"],
+    },
+    {
+      header: "PP Goals",
+      isNumeric: true,
+      keys: ["featuredStats", "regularSeason", "subSeason", "powerPlayGoals"],
+    },
+    {
+      header: "PP Points",
+      isNumeric: true,
+      keys: ["featuredStats", "regularSeason", "subSeason", "powerPlayPoints"],
+    },
+    {
+      header: "SH Goals",
+      isNumeric: true,
+      keys: ["featuredStats", "regularSeason", "subSeason", "shortHandedGoals"],
+    },
+    {
+      header: "SH Points",
+      isNumeric: true,
+      keys: [
+        "featuredStats",
+        "regularSeason",
+        "subSeason",
+        "shortHandedPoints",
+      ],
+    },
+    {
+      header: "+/-",
+      isNumeric: true,
+      keys: ["featuredStats", "regularSeason", "subSeason", "plusMinus"],
+    },
   ];
 
-  const manageSkaterStatHeader = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const manageSkaterStatHeader = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     console.log(event.target.checked);
     console.log(event.target.name);
     console.log(event.target.value);
 
     const checked = event.target.checked;
     const header = event.target.name;
-    const currentlyContains = !!skaterHeaders.find(x => x.header === header)
-    const headerInfo = skaterStatHeaders.find(x => x.header === header);
+    const currentlyContains = !!skaterHeaders.find((x) => x.header === header);
+    const headerInfo = skaterStatHeaders.find((x) => x.header === header);
 
-    if(!headerInfo){
+    if (!headerInfo) {
       return;
     }
 
-    if(!checked && currentlyContains){
-      setSkaterHeaders(skaterHeaders.filter(x => x.header !== headerInfo.header));
+    if (!checked && currentlyContains) {
+      setSkaterHeaders(
+        skaterHeaders.filter((x) => x.header !== headerInfo.header)
+      );
     }
 
-    if(checked && !currentlyContains){
+    if (checked && !currentlyContains) {
       setSkaterHeaders([...skaterHeaders, headerInfo]);
     }
   };
@@ -79,7 +152,7 @@ const FilterModal = ({ modalName, currentSkaterHeaders: skaterHeaders, setCurren
         handleOpen={handleOpen}
         handleClose={handleClose}>
         <FormControl component="fieldset" variant="standard">
-          <FormLabel component="legend">Display</FormLabel>
+          <FormLabel component="legend">Choose Stats</FormLabel>
           <FormGroup>
             {skaterStatHeaders.map((skaterStatHeader) => {
               return (
@@ -89,7 +162,11 @@ const FilterModal = ({ modalName, currentSkaterHeaders: skaterHeaders, setCurren
                       onChange={manageSkaterStatHeader}
                       name={skaterStatHeader.header}
                       value={skaterStatHeader.keys}
-                      checked={!!skaterHeaders.find(x => x.header === skaterStatHeader.header)}
+                      checked={
+                        !!skaterHeaders.find(
+                          (x) => x.header === skaterStatHeader.header
+                        )
+                      }
                     />
                   }
                   label={skaterStatHeader.header}
