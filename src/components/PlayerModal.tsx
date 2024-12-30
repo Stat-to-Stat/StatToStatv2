@@ -51,7 +51,7 @@ PlayerModalInterface) => {
   const [selectedSeason, setSelectedSeason] = useState<string | null>("");
 
   const seasons: SeasonType[] = [];
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 107; i++) {
     const currentYear = new Date().getFullYear() - i;
     const previousYear = currentYear - 1;
 
@@ -89,6 +89,7 @@ PlayerModalInterface) => {
           </div>
           <div>
             <Autocomplete
+              disabled={selectedSeason === ""}
               onChange={(
                 _e: React.SyntheticEvent<Element, Event>,
                 // Needs to be able to handle both Skaters and Goalies

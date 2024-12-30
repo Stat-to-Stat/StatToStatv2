@@ -31,7 +31,10 @@ const fetchSingleData = async <T>(url: string): Promise<T> => {
 };
 // Single Player Stats and Bio (Goalies included)
 
-export const getPlayer = async (id: number, season: string | null = null): Promise<AllPlayers> => {
+export const getPlayer = async (
+  id: number,
+  season: string | null = null
+): Promise<AllPlayers> => {
   const currentYear = new Date().getFullYear();
   const previousYear = currentYear - 1;
 
@@ -43,7 +46,7 @@ export const getPlayer = async (id: number, season: string | null = null): Promi
     `/api-web/v1/player/${id}/landing?seasonId=${season}`
   );
 
-  if(player != null){
+  if (player != null) {
     player.selectedSeason = season;
   }
 
@@ -53,6 +56,7 @@ export const getPlayer = async (id: number, season: string | null = null): Promi
 export const getAllPlayers = async (): Promise<PlayerInfo[]> => {
   try {
     let players: PlayerInfo[] = [];
+
     const skaters = await fetchData<Skater>(
       "/api/stats/rest/en/skater/summary?isAggregate=false&isGame=false&limit=-1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId%3E=20232024"
     );

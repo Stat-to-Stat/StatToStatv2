@@ -1,4 +1,5 @@
 interface Skater {
+  selectedSeason: string;
   type: "Skater";
   assists: number;
   evGoals: number;
