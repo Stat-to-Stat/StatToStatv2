@@ -4,7 +4,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import ModalTemplate from "./ModalTemplate";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import uniqBy from "lodash/uniqBy";
+
 import {
   // AllPlayers,
   Goalie,
