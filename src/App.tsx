@@ -19,8 +19,8 @@ import { HeaderInterface } from "./interfaces/ModalInterface";
 
 function App() {
   // For player drop down
-  const [playerList, setPlayerList] = useState<AllPlayers[]>([]);
-  const [currentPlayers, setCurrentPlayers] = useState<AllPlayers[]>([]);
+  const [currentSkaters, setCurrentSkaters] = useState<Skater[]>([]);
+  const [currentGoalies, setCurrentGoalies] = useState<Goalie[]>([]);
 
   const [currentSkaterHeaders, setCurrentSkaterHeaders] = useState<
     HeaderInterface[]
@@ -47,41 +47,23 @@ function App() {
     },
   ]);
 
-  // Get players
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const players = await getAllPlayers();
-        setPlayerList(players);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  function isSkater(player: AllPlayers): player is Skater {
-    return player != null && player.type === "Skater";
-  }
-
-  function isGoalie(player: AllPlayers): player is Goalie {
-    return player != null && player.type === "Goalie";
-  }
-
-  const addPlayer = (player: AllPlayers, season: string | null) => {
-    if (isSkater(player)) {
-      getPlayer(player.playerId, season).then((currPlayer: AllPlayers) => {
-        if (currPlayer !== null) currPlayer.type = "SkaterInfo";
-        setCurrentPlayers((prevPlayers) => [...prevPlayers, currPlayer]);
+  const addSkater = (skater: Skater, season: string | null) => {
+      getPlayer(skater.playerId, season).then((currPlayer: Skater) => {
+        if (!currPlayer){
+          return;
+        } 
+        setCurrentSkaters((prevPlayers: Skater[]) => [...prevPlayers, currPlayer]);
       });
-    } else if (isGoalie(player)) {
-      getPlayer(player.playerId, season).then((currPlayer: AllPlayers) => {
-        if (currPlayer !== null) currPlayer.type = "GoalieInfo";
-        setCurrentPlayers((prevPlayers) => [...prevPlayers, currPlayer]);
-      });
-    }
   };
+
+  const addGoalie = (goalie: Goalie, season: string | null) => {
+    getPlayer(goalie.playerId, season).then((currPlayer: Goalie) => {
+      if (!currPlayer){
+        return;
+      } 
+      setCurrentGoalies((prevPlayers: Goalie[]) => [...prevPlayers, currPlayer]);
+  });
+  }
 
   return (
     <div className="page-container">
@@ -91,8 +73,8 @@ function App() {
           <h2>Team Comparison</h2>
         </div>
         <div className="graveyard">
-          {currentPlayers !== null
-            ? currentPlayers.map((player, index) => {
+          {currentSkaters !== null
+            ? currentSkaters.map((player, index) => {
                 return <PlayerTombstone player={player} key={index} />;
               })
             : null}
@@ -105,15 +87,15 @@ function App() {
           />
           <PlayerModal
             modalName={"Add Player"}
-            players={playerList}
             currentSkaterHeaders={currentSkaterHeaders}
-            addPlayer={addPlayer}
+            addSkater={addSkater}
+            addGoalie={addGoalie}
             setCurrentSkaterHeaders={setCurrentSkaterHeaders}
           />
         </div>
         {/* Will need to pass in selected players, or an array of players to display their data */}
         <PlayerTable
-          players={currentPlayers}
+          players={currentSkaters}
           currentSkaterHeaders={currentSkaterHeaders}
         />
       </div>

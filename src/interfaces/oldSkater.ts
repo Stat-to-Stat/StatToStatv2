@@ -1,5 +1,6 @@
 interface Skater {
   selectedSeason: string;
+  type: "Skater";
   assists: number;
   evGoals: number;
   evPoints: number;
@@ -31,6 +32,7 @@ interface Skater {
 interface SkaterInfo {
   selectedSeason: string;
   gamesPlayed: number;
+  type: "SkaterInfo";
   playerId: number;
   skaterFullName: string;
   isActive: boolean;

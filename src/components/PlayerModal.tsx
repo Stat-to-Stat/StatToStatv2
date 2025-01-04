@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
-import Autocomplete from "@mui/material/Autocomplete";
+// import Autocomplete from "@mui/material/Autocomplete";
+import { ReactSearchAutocomplete } from 'react-search-autocomplete'
+
 import ModalTemplate from "./ModalTemplate";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
@@ -9,10 +11,10 @@ import {
   Goalie,
   // GoalieInfo,
   Skater,
-  AllPlayers,
   // SkaterInfo,
 } from "../interfaces/Player";
 import { PlayerModalInterface } from "../interfaces/ModalInterface";
+import { getAllPlayers } from "../api/nhlApi";
 
 interface SeasonType {
   label: string;
@@ -29,26 +31,18 @@ const buttonsContainer: React.CSSProperties = {
   justifyContent: "space-between",
 };
 
-function isSkater(player: AllPlayers): player is Skater {
-  return player !== null && player.type === "Skater";
-}
-
-function isGoalie(goalie: AllPlayers): goalie is Goalie {
-  return goalie !== null && goalie.type === "Goalie";
-}
-
 const PlayerModal = ({
   modalName,
-  players,
-  // goalies,
-  addPlayer,
-}: // addGoalie,
+  addSkater,
+  addGoalie
+}:
 PlayerModalInterface) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [selectedPlayer, setSelectedPlayer] = useState<AllPlayers>(null);
+  const [selectedPlayer, setSelectedPlayer] = useState<Skater | Goalie>();
   const [selectedSeason, setSelectedSeason] = useState<string | null>("");
+  const [playerList, setPlayerList] = useState<Skater[] | Goalie[]>([]);
 
   const seasons: SeasonType[] = [];
   for (let i = 0; i < 107; i++) {
@@ -56,6 +50,42 @@ PlayerModalInterface) => {
     const previousYear = currentYear - 1;
 
     seasons.push({ label: `${previousYear}-${currentYear}` });
+  }
+
+  // Get players
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let players = await getAllPlayers();
+
+        players = players.map((x, i) => {
+          x.id = `${x.playerId} ${i}`
+          return x;
+        });
+
+        setPlayerList(players);
+        console.log(players);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchData();
+  }, [selectedSeason]);
+
+  const handleOnSelect = (item: Skater | Goalie) => {
+    // the item selected
+    console.log(item)
+  }
+
+  const formatResult = (item: Skater | Goalie) => {
+    if ("skaterFullName" in item) {
+      return `${item.skaterFullName} (${item.teamAbbrevs})`;
+    }
+  
+    if ("goalieFullName" in item) {
+      return `${item.goalieFullName} (${item.teamAbbrevs})`;
+    }
   }
 
   return (
@@ -72,7 +102,7 @@ PlayerModalInterface) => {
         </Typography>
         <div id="modal-description" style={autoCorrectContainer}>
           <div>
-            <Autocomplete
+            {/* <Autocomplete
               disablePortal
               id="combo-box-demo"
               options={seasons}
@@ -85,50 +115,73 @@ PlayerModalInterface) => {
               ) => {
                 setSelectedSeason(season?.label ?? null);
               }}
-            />
+            /> */}
           </div>
           <div>
-            <Autocomplete
+            <div style={{ width: 300 }}>
+              <ReactSearchAutocomplete 
+                items={playerList}
+                className="autocomplete"
+                // onSearch={handleOnSearch}
+                // onHover={handleOnHover}
+                onSelect={handleOnSelect}
+                // onFocus={handleOnFocus}
+                autoFocus
+                formatResult={formatResult}
+                fuseOptions={{
+                  shouldSort: true,
+                  threshold: 0.6,
+                  location: 0,
+                  distance: 100,
+                  minMatchCharLength: 1,
+                  keys: [
+                    "skaterFullName",
+                    "goalieFullName"
+                  ]
+                }}
+                />
+            </div>
+            {/* <Autocomplete
               disabled={selectedSeason === ""}
               onChange={(
                 _e: React.SyntheticEvent<Element, Event>,
                 // Needs to be able to handle both Skaters and Goalies
-                newPlayer: AllPlayers
+                newPlayer: Skater | Goalie | null
               ) => {
+                if(!newPlayer){
+                  return;
+                }
+
                 setSelectedPlayer(newPlayer);
               }}
               disablePortal
               id="combo-box-demo"
-              options={players}
-              getOptionLabel={(option) => {
+              options={playerList}
+              getOptionLabel={(option: Skater | Goalie) => {
                 if (option === null) {
                   return "Unknown";
                 }
 
-                if (isSkater(option)) {
-                  if (option.skaterFullName) {
-                    return `${option.skaterFullName} (${option.teamAbbrevs})`;
-                  }
+                if (option["skaterFullName"]) {
+                  return `${option.skaterFullName} (${option.teamAbbrevs})`;
                 }
 
-                if (isGoalie(option)) {
-                  if (option.goalieFullName) {
-                    return `${option.goalieFullName} (${option.teamAbbrevs})`;
-                  }
+                if (option["goalieFullName"]) {
+                  return `${option.goalieFullName} (${option.teamAbbrevs})`;
                 }
 
                 return "Unknown";
               }}
               sx={{ width: 300 }}
               renderInput={(params) => <TextField {...params} label="Player" />}
-            />
+            /> */}
           </div>
           <div style={buttonsContainer}>
-            <Button
+            {/* <Button
               className="btn-success"
               variant="contained"
               onClick={
-                () => addPlayer(selectedPlayer, selectedSeason)
+                () => addSkater(selectedPlayer, selectedSeason)
                 // selectedPlayer !== null && selectedPlayer.type === "Skater"
                 //   ? addPlayer(selectedPlayer)
                 //   : // Side effect of the issue on line 76
@@ -141,7 +194,7 @@ PlayerModalInterface) => {
               variant="contained"
               onClick={() => setOpen(!open)}>
               Cancel
-            </Button>
+            </Button> */}
           </div>
         </div>
       </ModalTemplate>
