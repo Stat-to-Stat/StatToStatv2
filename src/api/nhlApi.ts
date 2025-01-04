@@ -53,15 +53,16 @@ export const getPlayer = async (
   return player;
 };
 
-export const getAllPlayers = async (): Promise<PlayerInfo[]> => {
+export const getAllPlayers = async (season: string): Promise<PlayerInfo[]> => {
+  if (!season) return [];
   try {
     let players: PlayerInfo[] = [];
 
     const skaters = await fetchData<Skater>(
-      "/api/stats/rest/en/skater/summary?isAggregate=false&isGame=false&limit=-1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId%3E=20232024"
+      `/api/stats/rest/en/skater/summary?isAggregate=false&isGame=false&limit=-1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId%3E=${season}`
     );
     const goalies = await fetchData<Goalie>(
-      "/api/stats/rest/en/goalie/summary?isAggregate=false&isGame=false&limit=-1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId%3E=20232024"
+      `/api/stats/rest/en/goalie/summary?isAggregate=false&isGame=false&limit=-1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId%3E=${season}`
     );
     const valid = Array.isArray(skaters) && Array.isArray(goalies);
     if (valid) {

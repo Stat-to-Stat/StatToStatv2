@@ -146,13 +146,14 @@ const PlayerTable: React.FC<PlayerTableProps> = ({
     player: PlayerInfo,
     statHeader: HeaderInterface
   ): string {
-    console.log("hit");
     if (player == null) return "N/A";
-
+    // console.log(player);
     let playerValue: any = player;
     statHeader.keys.forEach((stat) => {
       playerValue = playerValue[stat];
-      console.log(playerValue);
+      if (playerValue === undefined) {
+        playerValue = "N/A";
+      }
     });
 
     return playerValue;

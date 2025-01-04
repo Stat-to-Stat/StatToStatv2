@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import PlayerTombstone from "./components/PlayerTombstone";
 import FilterModal from "./components/FilterModal";
@@ -46,20 +46,6 @@ function App() {
       keys: ["sweaterNumber"],
     },
   ]);
-
-  // Get players
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const players = await getAllPlayers();
-        setPlayerList(players);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   function isSkater(player: AllPlayers): player is Skater {
     return player != null && player.type === "Skater";
