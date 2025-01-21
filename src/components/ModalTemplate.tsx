@@ -32,8 +32,7 @@ const ModalTemplate = ({ isOpen, handleClose, children }: ModalInterface) => {
         onClose={handleClose}
         aria-labelledby="modal-title"
         aria-describedby="modal-description"
-        slots={{ backdrop: BlurredBackdrop }}
-      >
+        slots={{ backdrop: BlurredBackdrop }}>
         <Box sx={style}>{children}</Box>
       </Modal>
     </div>

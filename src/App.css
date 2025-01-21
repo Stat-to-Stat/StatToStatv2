@@ -1,5 +1,5 @@
 /* Move high-level classes to index */
-.page-container{
+.page-container {
   width: 100%;
   height: 100%;
   display: grid;
@@ -7,7 +7,7 @@
 }
 
 /* Move page based classes to their specified css class files */
-.comparison-container{
+.comparison-container {
   width: 100%;
   height: 100%;
   display: flex;
@@ -16,46 +16,46 @@
   align-items: center;
 }
 
-.graveyard{
+.graveyard {
   /* For now we do this until we figure out how to do the rows n shit */
   display: flex;
   gap: 1rem;
-  background-color: #3B4368;
+  background-color: #3b4368;
   border-radius: 10px;
   filter: drop-shadow(2px 3px 10px rgba(0, 0, 0, 0.2));
   /* padding: 10px; */
 }
 
-.row{
+.row {
   display: flex;
 }
 
-.gap-sm{
+.gap-sm {
   gap: 1rem;
 }
 
-.gap-md{
+.gap-md {
   gap: 1.5rem;
 }
 
-.gap-lg{
+.gap-lg {
   gap: 2rem;
 }
 
-.btn-primary{
-  background-color: #5B99FF !important;
+.btn-primary {
+  background-color: #5b99ff !important;
 }
 
-.btn-success{
-  background-color: #C3FFAE !important;
+.btn-success {
+  background-color: #c3ffae !important;
   color: black !important;
 }
 
-.btn-failure{
-  background-color: #FFAEAE !important;
+.btn-failure {
+  background-color: #ffaeae !important;
   color: black !important;
 }
 
-.modal-container{
+.modal-container {
   color: black !important;
 }
