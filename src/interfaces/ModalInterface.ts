@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { AllPlayers } from "../interfaces/Player";
+import { AllPlayers, GoalieInfo, SkaterInfo } from "../interfaces/Player";
 
 interface ModalInterface {
   isOpen?: boolean;
@@ -11,10 +11,20 @@ interface ModalInterface {
   setCurrentSkaterHeaders: (headers: HeaderInterface[]) => void;
 }
 
+type NestedKeys<T> = T extends object
+  ? {
+      [K in keyof T]: K extends string
+        ? T[K] extends object
+          ? `${K}` | `${K}.${Extract<NestedKeys<T[K]>, string>}`
+          : `${K}`
+        : K;
+    }[keyof T]
+  : keyof T;
+
 interface HeaderInterface {
   header: string;
   isNumeric: boolean;
-  keys: string[];
+  keys: NestedKeys<SkaterInfo | GoalieInfo>;
 }
 
 interface PlayerModalInterface extends ModalInterface {

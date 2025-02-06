@@ -26,92 +26,87 @@ const FilterModal = ({
     {
       header: "First Name",
       isNumeric: false,
-      keys: ["firstName", "default"],
+      keys: "firstName.default"
     },
     {
       header: "Last Name",
       isNumeric: false,
-      keys: ["lasttName", "default"],
+      keys: "lastName.default",
     },
     {
       header: "Team",
       isNumeric: false,
-      keys: ["fullTeamName", "default"],
+      keys: "fullTeamName.default",
     },
     {
       header: "Number",
       isNumeric: true,
-      keys: ["sweaterNumber"],
+      keys: "sweaterNumber",
     },
     {
       header: "Career Goals (Reg)",
       isNumeric: true,
-      keys: ["careerTotals", "regularSeason", "goals"],
+      keys: "careerTotals.regularSeason.goals",
     },
     {
       header: "Goals",
       isNumeric: true,
-      keys: ["featuredStats", "regularSeason", "subSeason", "goals"],
+     keys: "featuredStats.regularSeason.subSeason.goals",
     },
     {
       header: "Assists",
       isNumeric: true,
-      keys: ["featuredStats", "regularSeason", "subSeason", "assists"],
+     keys: "featuredStats.regularSeason.subSeason.assists",
     },
     {
       header: "Points",
       isNumeric: true,
-      keys: ["featuredStats", "regularSeason", "subSeason", "points"],
+     keys: "featuredStats.regularSeason.subSeason.points",
     },
     {
       header: "Penalty Minutes",
       isNumeric: true,
-      keys: ["featuredStats", "regularSeason", "subSeason", "penaltyMins"],
+     keys: "featuredStats.regularSeason.subSeason.penaltyMins",
     },
     {
       header: "Game Winning Goals",
       isNumeric: true,
-      keys: ["featuredStats", "regularSeason", "subSeason", "gameWinningGoals"],
+      keys: "featuredStats.regularSeason.subSeason.gameWinningGoals",
     },
     {
       header: "Shots",
       isNumeric: true,
-      keys: ["featuredStats", "regularSeason", "subSeason", "shots"],
+       keys: "featuredStats.regularSeason.subSeason.shots",
     },
     {
       header: "Shooting %",
       isNumeric: true,
-      keys: ["featuredStats", "regularSeason", "subSeason", "shootingPctg"],
+      keys: "featuredStats.regularSeason.subSeason.shootingPctg",
     },
     {
       header: "PP Goals",
       isNumeric: true,
-      keys: ["featuredStats", "regularSeason", "subSeason", "powerPlayGoals"],
+      keys: "featuredStats.regularSeason.subSeason.powerPlayGoals",
     },
     {
       header: "PP Points",
       isNumeric: true,
-      keys: ["featuredStats", "regularSeason", "subSeason", "powerPlayPoints"],
+      keys: "featuredStats.regularSeason.subSeason.powerPlayPoints",
     },
     {
       header: "SH Goals",
       isNumeric: true,
-      keys: ["featuredStats", "regularSeason", "subSeason", "shortHandedGoals"],
+      keys: "featuredStats.regularSeason.subSeason.shorthandedGoals",
     },
     {
       header: "SH Points",
       isNumeric: true,
-      keys: [
-        "featuredStats",
-        "regularSeason",
-        "subSeason",
-        "shortHandedPoints",
-      ],
+      keys: "featuredStats.regularSeason.subSeason.shorthandedPoints",
     },
     {
       header: "+/-",
       isNumeric: true,
-      keys: ["featuredStats", "regularSeason", "subSeason", "plusMinus"],
+      keys: "featuredStats.regularSeason.subSeason.plusMinus",
     },
   ];
 
