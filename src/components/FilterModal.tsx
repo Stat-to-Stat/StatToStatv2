@@ -113,6 +113,16 @@ const FilterModal = ({
       isNumeric: true,
       keys: ["featuredStats", "regularSeason", "subSeason", "plusMinus"],
     },
+    {
+      header: "Goals Against Average",
+      isNumeric: true,
+      keys: ["featuredStats", "regularSeason", "subSeason", "goalsAgainstAvg"],
+    },
+    {
+      header: "Save %",
+      isNumeric: true,
+      keys: ["featuredStats", "regularSeason", "subSeason", "savePctg"],
+    },
   ];
 
   const manageSkaterStatHeader = (

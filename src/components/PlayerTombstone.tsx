@@ -54,7 +54,7 @@ const GoalieTombstoneHandler = (player: GoalieInfo) => {
         <img src={player.headshot} style={personStyle} />
       </div>
       <div>{dispayName}</div>
-      <div>2023-2024</div>
+      <div>Put Season Here</div>
     </div>
   );
 };
