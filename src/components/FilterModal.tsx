@@ -114,14 +114,49 @@ const FilterModal = ({
       keys: ["featuredStats", "regularSeason", "subSeason", "plusMinus"],
     },
     {
+      header: "Wins",
+      isNumeric: true,
+      keys: ["featuredStats", "regularSeason", "subSeason", "wins"],
+    },
+    {
+      header: "Wins (Career)",
+      isNumeric: true,
+      keys: ["featuredStats", "regularSeason", "career", "wins"],
+    },
+    {
+      header: "Losses",
+      isNumeric: true,
+      keys: ["featuredStats", "regularSeason", "subSeason", "losses"],
+    },
+    {
+      header: "Losses (Career)",
+      isNumeric: true,
+      keys: ["featuredStats", "regularSeason", "career", "losses"],
+    },
+    {
+      header: "Shutouts",
+      isNumeric: true,
+      keys: ["featuredStats", "regularSeason", "subSeason", "shutouts"],
+    },
+    {
       header: "Goals Against Average",
       isNumeric: true,
       keys: ["featuredStats", "regularSeason", "subSeason", "goalsAgainstAvg"],
     },
     {
+      header: "Goals Against Average (Career)",
+      isNumeric: true,
+      keys: ["featuredStats", "regularSeason", "career", "goalsAgainstAvg"],
+    },
+    {
       header: "Save %",
       isNumeric: true,
       keys: ["featuredStats", "regularSeason", "subSeason", "savePctg"],
+    },
+    {
+      header: "Save % (Career)",
+      isNumeric: true,
+      keys: ["featuredStats", "regularSeason", "career", "savePctg"],
     },
   ];
 
