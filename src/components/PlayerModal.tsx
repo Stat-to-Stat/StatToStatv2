@@ -53,16 +53,20 @@ PlayerModalInterface) => {
   const handleClose = () => setOpen(false);
   const [selectedPlayer, setSelectedPlayer] = useState<AllPlayers>(null);
   const [selectedSeason, setSelectedSeason] = useState<string>(DEFAULT_SEASON);
-  const [playerList, setPlayerList] = useState<PlayerInfo[]>([]);
+  const [playerList, setPlayerList] = useState<(Goalie | Skater)[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const players = await getAllPlayers(selectedSeason);
-      const filteredPlayers = players.sort((a, b) => {
-        const nameA = (isSkater(a) ? a.skaterFullName : a.goalieFullName) || "";
-        const nameB = (isSkater(b) ? b.skaterFullName : b.goalieFullName) || "";
-        return nameA.localeCompare(nameB);
-      });
+      const filteredPlayers = players
+        .filter((player): player is Goalie | Skater => player !== null)
+        .sort((a, b) => {
+          const nameA =
+            (isSkater(a) ? a.skaterFullName : a.goalieFullName) || "";
+          const nameB =
+            (isSkater(b) ? b.skaterFullName : b.goalieFullName) || "";
+          return nameA.localeCompare(nameB);
+        });
       setPlayerList(filteredPlayers);
     };
 
