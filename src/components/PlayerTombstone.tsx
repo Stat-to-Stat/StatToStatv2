@@ -27,7 +27,7 @@ function isGoalie(player: AllPlayers): player is GoalieInfo {
 
 const SkaterTombstoneHandler = (player: SkaterInfo) => {
   const dispayName = `${player.lastName.default}, ${player.firstName.default}`;
-  console.log(player.headshot);
+  // console.log(player.headshot);
 
   return (
     <div style={tombstoneStyle}>
@@ -46,7 +46,7 @@ const SkaterTombstoneHandler = (player: SkaterInfo) => {
 
 const GoalieTombstoneHandler = (player: GoalieInfo) => {
   const dispayName = `${player.lastName.default}, ${player.firstName.default}`;
-  console.log(player.headshot);
+  // console.log(player.headshot);
 
   return (
     <div style={tombstoneStyle}>

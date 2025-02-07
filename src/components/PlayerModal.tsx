@@ -58,12 +58,11 @@ PlayerModalInterface) => {
   useEffect(() => {
     const fetchData = async () => {
       const players = await getAllPlayers(selectedSeason);
-      const filteredPlayers = players
-        .filter(
-          (player) =>
-            player.seasonId.toString() === selectedSeason.replace("-", "")
-        )
-        .sort((a, b) => a.lastName - b.lastName);
+      const filteredPlayers = players.sort((a, b) => {
+        const nameA = (isSkater(a) ? a.skaterFullName : a.goalieFullName) || "";
+        const nameB = (isSkater(b) ? b.skaterFullName : b.goalieFullName) || "";
+        return nameA.localeCompare(nameB);
+      });
       setPlayerList(filteredPlayers);
     };
 

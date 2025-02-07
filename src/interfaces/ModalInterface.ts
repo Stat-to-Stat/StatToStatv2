@@ -15,6 +15,7 @@ interface HeaderInterface {
   header: string;
   isNumeric: boolean;
   keys: string[];
+  category: string;
 }
 
 interface PlayerModalInterface extends ModalInterface {

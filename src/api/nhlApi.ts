@@ -55,14 +55,17 @@ export const getPlayer = async (
 
 export const getAllPlayers = async (season: string): Promise<PlayerInfo[]> => {
   if (!season) return [];
+  // Convert season format from "2024-2025" to "20242025"
+  const formattedSeason = season.replace("-", "");
+
   try {
     let players: PlayerInfo[] = [];
 
     const skaters = await fetchData<Skater>(
-      `/api/stats/rest/en/skater/summary?isAggregate=false&isGame=false&limit=-1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId%3E=${season}`
+      `/api/stats/rest/en/skater/summary?isAggregate=false&isGame=false&limit=-1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId=${formattedSeason}`
     );
     const goalies = await fetchData<Goalie>(
-      `/api/stats/rest/en/goalie/summary?isAggregate=false&isGame=false&limit=-1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId%3E=${season}`
+      `/api/stats/rest/en/goalie/summary?isAggregate=false&isGame=false&limit=-1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId=${formattedSeason}`
     );
     const valid = Array.isArray(skaters) && Array.isArray(goalies);
     if (valid) {
