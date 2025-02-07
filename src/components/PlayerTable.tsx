@@ -11,8 +11,8 @@ import {
   Box,
 } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
-import { GoalieInfo } from "../interfaces/Goalie";
-import { SkaterInfo } from "../interfaces/Skater";
+// import { GoalieInfo } from "../interfaces/Goalie";
+// import { SkaterInfo } from "../interfaces/Skater";
 import { PlayerInfo, SeasonField } from "../interfaces/Player";
 import { HeaderInterface } from "../interfaces/ModalInterface";
 
@@ -37,11 +37,11 @@ interface EnhancedTableHeadProps {
   tableHeaders: TableHeaderName[];
 }
 
-const isSkaterInfo = (player: PlayerInfo): player is SkaterInfo =>
-  player !== null && "seasonTotals" in player && "skaterFullName" in player;
+// const isSkaterInfo = (player: PlayerInfo): player is SkaterInfo =>
+//   player !== null && "seasonTotals" in player && "skaterFullName" in player;
 
-const isGoalieInfo = (player: PlayerInfo): player is GoalieInfo =>
-  player !== null && "seasonTotals" in player && "goalieFullName" in player;
+// const isGoalieInfo = (player: PlayerInfo): player is GoalieInfo =>
+//   player !== null && "seasonTotals" in player && "goalieFullName" in player;
 
 const isSeasonField = (player: PlayerInfo): player is SeasonField =>
   player !== null && "selectedSeason" in player;

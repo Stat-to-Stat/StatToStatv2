@@ -2,7 +2,7 @@
 import {
   Skater,
   Goalie,
-  SkaterInfo,
+  // SkaterInfo,
   PlayerInfo,
   AllPlayers,
 } from "../interfaces/Player";
