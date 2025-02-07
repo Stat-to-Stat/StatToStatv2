@@ -139,6 +139,7 @@ PlayerModalInterface) => {
 
                 return "Unknown";
               }}
+              getOptionKey={(option: Goalie | Skater) => option?.playerId}
               sx={{ width: 300 }}
               renderInput={(params) => <TextField {...params} label="Player" />}
             />

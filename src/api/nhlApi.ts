@@ -41,7 +41,6 @@ export const getPlayer = async (
   season = season == null ? `${currentYear}${previousYear}` : season;
   season = season.replace(/-/g, "");
 
-  console.log(id);
   const player = await fetchSingleData<AllPlayers>(
     `/api-web/v1/player/${id}/landing?seasonId=${season}`
   );

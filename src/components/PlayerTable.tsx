@@ -103,9 +103,9 @@ const PlayerTable: React.FC<PlayerTableProps> = ({
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<string>("firstName");
 
-  useEffect(() => {
-    console.log("Players data:", players);
-  }, [players]);
+  // useEffect(() => {
+  //   console.log("Players data:", players);
+  // }, [players]);
 
   const handleRequestSort = (property: string) => {
     const isAsc = orderBy === property && order === "asc";
