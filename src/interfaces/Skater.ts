@@ -1,5 +1,4 @@
 interface Skater {
-  selectedSeason: string;
   type: "Skater";
   assists: number;
   evGoals: number;
@@ -27,10 +26,10 @@ interface Skater {
   skaterFullName: string;
   teamAbbrevs: string;
   timeOnIcePerGame: number;
+  skaterInfo: SkaterInfo;
 }
 
 interface SkaterInfo {
-  selectedSeason: string;
   gamesPlayed: number;
   type: "SkaterInfo";
   playerId: number;

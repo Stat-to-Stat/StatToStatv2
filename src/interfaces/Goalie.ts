@@ -1,5 +1,4 @@
 interface Goalie {
-  selectedSeason: string;
   type: "Goalie";
   assists: number;
   gamesPlayed: number;
@@ -24,11 +23,10 @@ interface Goalie {
   ties: null;
   timeOnIce: number;
   wins: number;
+  goalieInfo: GoalieInfo;
 }
 
 interface GoalieInfo {
-  selectedSeason: string;
-  type: "GoalieInfo";
   playerId: number;
   isActive: boolean;
   currentTeamId: number;
