@@ -22,6 +22,8 @@ function App() {
   const [playerList, setPlayerList] = useState<AllPlayers[]>([]);
   const [currentPlayers, setCurrentPlayers] = useState<AllPlayers[]>([]);
 
+  // This is what controls what data is displayed. Need to have this take in the appropriate season, and be able
+  // to access that specific seasons stats. Those stats are accurately retrieved in addPlayer
   const [currentSkaterHeaders, setCurrentSkaterHeaders] = useState<
     HeaderInterface[]
   >([
