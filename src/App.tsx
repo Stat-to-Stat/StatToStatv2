@@ -29,21 +29,31 @@ function App() {
       header: "First Name",
       isNumeric: false,
       keys: ["firstName", "default"],
+      category: "Player Info",
     },
     {
       header: "Last Name",
       isNumeric: false,
       keys: ["lastName", "default"],
+      category: "Player Info",
     },
     {
       header: "Team",
       isNumeric: false,
       keys: ["fullTeamName", "default"],
+      category: "Player Info",
     },
     {
       header: "Number",
       isNumeric: true,
       keys: ["sweaterNumber"],
+      category: "Player Info",
+    },
+    {
+      header: "Goals",
+      isNumeric: true,
+      keys: ["featuredStats", "regularSeason", "subSeason", "goals"],
+      category: "Skater Stats",
     },
   ]);
 
