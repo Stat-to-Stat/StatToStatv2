@@ -18,8 +18,7 @@ export interface PlayerBase {
   playerSlug: string;
 }
 
-// Stats interfaces separated by player type
-export interface SkaterStats {
+export interface SkaterStats extends PlayerBase {
   gamesPlayed: number;
   goals: number;
   assists: number;
@@ -32,7 +31,7 @@ export interface SkaterStats {
   shootingPctg?: number;
 }
 
-export interface GoalieStats {
+export interface GoalieStats extends PlayerBase {
   gamesPlayed: number;
   gamesStarted: number;
   wins: number;
