@@ -1,12 +1,5 @@
-// import jsonp from 'jsonp';
-import {
-  Skater,
-  Goalie,
-  // SkaterInfo,
-  PlayerInfo,
-  AllPlayers,
-} from "../interfaces/Player";
-// import { SkaterInfo } from "../interfaces/PlayerInfo";
+import { Goalie } from "../interfaces/Player";
+import { Player } from "../interfaces/Player";
 
 const fetchData = async <T>(url: string): Promise<T | T[] | null> => {
   try {
